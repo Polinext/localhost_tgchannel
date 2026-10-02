@@ -1,0 +1,3558 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вайбкодинг — закрытый канал polinext.production</title>
+<meta name="description" content="Все материалы по вайбкодингу — в одной подписке. Промпты, пошаговые руководства и рабочие приёмы для создания сайтов, приложений и AI-сервисов через Claude и Codex.">
+<meta name="theme-color" content="#0051ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script type="importmap">
+{"imports":{
+  "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
+  "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs"
+}}
+</script>
+<style>
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter-V.ttf") format("truetype");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+/* Inter runs wide at display sizes: tighten the big type. */
+.name, .display-h, .tide-h1, .tide-h2, .steps h3, .closing-h { letter-spacing: -0.045em; }
+.t-lead, .t-figure { letter-spacing: -0.02em; }
+:root {
+  /* ── Tier 1 primitives ── */
+  --raw-color-white: #ffffff;
+  --raw-color-black: #000000;
+  --raw-color-porcelain: #f0f0f0;
+  --raw-color-electric-500: #0051ff;
+  --raw-color-kindle-ground: #010b24;
+  --raw-color-kindle-char: #061a4d;
+  --raw-color-kindle-body: #0a2a7a;
+  --raw-color-kindle-ember: #2e6bff;
+  --raw-color-kindle-lick: #9fc2ff;
+  --raw-color-chrome-sheen: #ffffff;
+  --raw-color-chrome-deep: #c9dcff;
+  --raw-color-neutral-100: #ededed;
+  --raw-color-neutral-900: #171717;
+  /* ── Tier 2 roles ── */
+  --scene-surface: #f0f0f0;
+  --scene-surface-foreground: #171717;
+  --scene-wire: #0051ff;
+  --scene-mark: #ffffff;
+  --stage-ground: #f0f0f0; --stage-ink: #000000; --stage-rule: #000000;
+  --stage-immersed-ink: #ffffff;
+  --stage-pill: #ffffff; --stage-pill-ink: #000000;
+  --stage-accent: #0051ff; --stage-accent-foreground: #ffffff;
+  --surface-raised: #ededed; --surface-accent: #0051ff; --surface-accent-foreground: #ffffff;
+  --scene-tide-bg: #010b24; --scene-tide-a: #061a4d; --scene-tide-b: #0a2a7a; --scene-tide-c: #2e6bff; --scene-tide-d: #9fc2ff;
+  --scene-chrome-sheen: #ffffff; --scene-chrome-deep: #c9dcff;
+  --scene-wire-immersed: #ffffff;
+  --scene-wire-spark: #9fc2ff;
+  --duration-fast: 150ms; --duration-normal: 250ms;
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --leading-display: 1.1;
+  --radius-card: 1.1rem;
+
+  /* One family everywhere: Inter (variable, Cyrillic included). */
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-serif: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* ── The frame ── */
+  --frame-lead: max(20px, 2.3vw);
+  --frame-body: max(14px, 1.1111vw);
+  --frame-figure: max(30px, 2.7778vw);
+  --frame-nav: max(16px, 1.25vw);
+  --frame-control: max(46px, 3.4722vw);
+  --frame-gutter: max(22px, 2.0833vw);
+  --frame-heading-top: 10lvh;
+  --frame-navbar: var(--frame-control);
+  --stage-rise: 1.5rem;
+  /* How much of a 100lvh stage the browser's toolbars cover on a phone, plus the home indicator. */
+  --ui-cover: calc(100lvh - 100svh + env(safe-area-inset-bottom, 0px));
+}
+
+/* The rem grid (the gallery) */
+html { font-size: 16px; }
+@media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+@media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+@media (max-width: 1024px) { html { font-size: 1.5625vw; } }
+@media (max-width: 640px)  { html { font-size: 4.444444vw; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { background: #ffffff; color: #171717; }
+html.is-locked { position: relative; overflow: hidden; height: 100%; }
+body { margin: 0; font-family: var(--font-sans); font-weight: 500; min-height: 100lvh; width: 100%; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1, h2, h3, p, ul, ol, li { margin: 0; padding: 0; font: inherit; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+main { position: relative; background: #f0f0f0; }
+
+/* ── Load errors ── */
+.load-errors { position: fixed; top: 0; inset-inline: 0; z-index: 70; display: flex; flex-direction: column; gap: 4px; padding: 8px; pointer-events: none; }
+.load-errors p { pointer-events: auto; align-self: center; max-width: min(720px, 100%); background: #b00020; color: #fff; font: 500 13px/1.35 var(--font-sans); padding: 8px 14px; border-radius: 10px; word-break: break-all; }
+
+/* ── The opening curtain ── */
+.preloader { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: #0051ff; will-change: transform; }
+.preloader p { font: 700 var(--frame-figure)/1 var(--font-serif); color: #fff; font-variant-numeric: tabular-nums; }
+
+/* ── The runway & stage ── */
+.hero { position: relative; }
+.runway { position: relative; height: 700lvh; }
+.stage { position: sticky; top: 0; height: 100lvh; width: 100%; overflow: hidden; }
+.layer { position: absolute; inset: 0; }
+.layer--over { pointer-events: none; }
+.layer--hidden { opacity: 0; visibility: hidden; }
+.canvas-box { position: absolute; inset: 0; opacity: 0; }
+.canvas-box canvas { display: block; width: 100%; height: 100%; }
+.poster { position: absolute; inset: 0; width: 100%; height: 100lvh; object-fit: contain; }
+.anchor { position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none; }
+
+/* StageFrame / StageBottom */
+.sf { position: absolute; inset: 0; pointer-events: none; }
+.sb { position: absolute; inset-inline: 0; bottom: 0; height: 55.5556vw; }
+.pos { position: absolute; left: var(--l, auto); right: var(--r, auto); top: var(--t, auto); width: var(--w, auto); }
+.t-lead { font: 700 var(--frame-lead)/1.08 var(--font-serif); }
+.t-body { font: 500 var(--frame-body)/1.25 var(--font-sans); }
+.t-figure { font: 800 var(--frame-figure)/1 var(--font-serif); }
+.nowrap { white-space: nowrap; }
+.ink { color: #000; }
+.imm { color: #fff; }
+.display-h { font: 800 max(40px, 7.4vw)/0.95 var(--font-display); color: #fff; white-space: nowrap; }
+
+/* Screen 1 */
+.name { position: absolute; left: 50%; top: 1.3889vw; translate: -50% 0; white-space: nowrap; font: 800 14.6vw/1 var(--font-display); color: #000; }
+.name-sub { position: absolute; left: var(--sub-left, 9vw); top: var(--sub-top, 16vw); margin: 0; padding-top: 0.6vw; font: 600 max(14px, 1.45vw)/1.25 var(--font-sans); color: #000; white-space: nowrap; }
+.name-sub a { pointer-events: auto; color: inherit; text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
+.name-sub a:hover { color: #0051ff; }
+.hero-col { position: absolute; left: var(--frame-gutter); bottom: var(--frame-gutter); width: min(27vw, 560px); display: flex; flex-direction: column; align-items: flex-start; gap: max(14px, 1.4vw); }
+.lead-accent { color: #0051ff; }
+.hero-col .t-lead { color: #000; font-size: max(18px, 1.95vw); line-height: 1.12; }
+.price-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35em; color: #000; }
+.price-small { font: 500 var(--frame-body)/1.2 var(--font-sans); }
+.price-tail { display: inline-flex; align-items: baseline; gap: 0.3em; white-space: nowrap; }
+.price-big { font: 800 max(28px, 2.9vw)/1 var(--font-sans); letter-spacing: -0.03em; color: #0051ff; }
+.hero-actions { display: flex; align-items: center; gap: max(16px, 1.6vw); }
+.hero-actions .btn-book { position: static; }
+.hero-more { pointer-events: auto; color: #0051ff; text-decoration: underline; text-underline-offset: 2px; font: 600 var(--frame-nav)/1 var(--font-sans); white-space: nowrap; }
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  .hero-col { width: calc(100% - var(--frame-gutter) * 2); }
+}
+.inside-col { position: absolute; left: var(--frame-gutter); bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); width: min(34vw, 660px); display: flex; flex-direction: column; align-items: flex-start; gap: max(16px, 1.6vw); color: #fff; }
+.inside-list { display: flex; flex-direction: column; width: 100%; }
+.inside-list li { padding-block: max(8px, 0.75vw); border-top: 1px solid rgb(255 255 255 / 0.3); font: 700 max(17px, 1.75vw)/1.15 var(--font-sans); letter-spacing: -0.015em; }
+.inside-list li { display: flex; align-items: center; justify-content: space-between; gap: max(12px, 1.1vw); }
+.inside-text { flex: 1; min-width: 0; }
+.thumb { flex: none; display: grid; place-items: center; width: max(64px, 5.4vw); aspect-ratio: 4 / 3; overflow: hidden; border-radius: max(8px, 0.6vw); border: 1px dashed rgb(255 255 255 / 0.45); background: rgb(255 255 255 / 0.06); font: 600 max(10px, 0.7vw)/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: rgb(255 255 255 / 0.5); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb:has(img) { border-style: solid; border-color: rgb(255 255 255 / 0.25); }
+.inside-list li:last-child { border-bottom: 1px solid rgb(255 255 255 / 0.3); }
+.inside-list b { color: #9fc2ff; font-weight: 800; }
+.inside-note { font: 500 var(--frame-body)/1.3 var(--font-sans); opacity: 0.85; }
+.inside-save { position: relative; margin-top: 0.4em; font: 800 max(36px, 4.6vw)/0.95 var(--font-sans); letter-spacing: -0.04em; color: #9fc2ff; white-space: nowrap; }
+/* "экономия" — a framed tag pinned to the figure's corner, at an angle */
+.save-tag { position: absolute; left: calc(100% - 0.55em); top: -0.5em; transform: rotate(-9deg); transform-origin: 0% 100%; padding: 0.35em 0.7em; border: 2px solid #fff; border-radius: 0.4em; background: #0051ff; box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); font: 800 max(13px, 1.05vw)/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+.inside-label { display: flex; align-items: center; gap: 0.6em; padding-block: max(10px, 0.9vw) max(4px, 0.4vw) !important; border-top: 1px solid rgb(255 255 255 / 0.3); font: 700 max(13px, 1.05vw)/1 var(--font-sans) !important; letter-spacing: 0.06em !important; text-transform: uppercase; color: #9fc2ff; }
+.inside-label + .inside-fresh { border-top: 0; }
+.inside-fresh { padding-left: 1.1em; border-left: 2px solid #9fc2ff; }
+.pulse { position: relative; width: 0.7em; height: 0.7em; flex: none; border-radius: 50%; background: #9fc2ff; }
+.pulse::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #9fc2ff; animation: pulse 1.6s ease-out infinite; }
+@keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(2.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pulse::after { animation: none; } }
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  .inside-col { width: calc(100% - var(--frame-gutter) * 2); padding: 16px 16px 20px; border-radius: 20px; background: rgb(1 11 36 / 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+}
+.who-col { position: absolute; left: var(--frame-gutter); bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); width: min(32vw, 620px); display: flex; flex-direction: column; color: #fff; }
+.who-col li { display: grid; grid-template-columns: max(30px, 2.6vw) 1fr; column-gap: max(10px, 0.9vw); row-gap: 0.35em; padding-block: max(10px, 1vw); border-top: 1px solid rgb(255 255 255 / 0.3); }
+.who-col li:last-child { border-bottom: 1px solid rgb(255 255 255 / 0.3); }
+.who-num { grid-row: span 2; font: 800 max(13px, 1.05vw)/1.5 var(--font-sans); color: #9fc2ff; }
+.who-title { font: 800 max(18px, 1.85vw)/1.1 var(--font-sans); letter-spacing: -0.02em; }
+.who-text { font: 500 var(--frame-body)/1.3 var(--font-sans); opacity: 0.85; }
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  .who-col { width: calc(100% - var(--frame-gutter) * 2); padding: 4px 16px; border-radius: 20px; background: rgb(1 11 36 / 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .who-col li:first-child { border-top: 0; }
+  .who-col li { padding-block: 9px; }
+  .who-title { font-size: 17px; }
+  .who-text { font-size: 13px; }
+  .who-col li:last-child { border-bottom: 0; }
+}
+.btn-book { pointer-events: auto; position: absolute; left: auto; right: 13vw; top: 50vw; display: flex; height: var(--frame-control); min-width: 16.0417vw; padding-inline: 1.6vw; white-space: nowrap; align-items: center; justify-content: center; border-radius: 9999px; background: #0051ff; color: #fff; font: 600 var(--frame-nav)/1 var(--font-serif); transition: background-color 150ms var(--ease-entrance); }
+.btn-book:hover { background: rgb(0 81 255 / 0.9); }
+.see-runs { position: absolute; right: 2.0833vw; top: 51.1111vw; }
+.see-runs a { pointer-events: auto; color: #0051ff; text-decoration: underline; text-underline-offset: 2px; font: 600 var(--frame-nav)/1 var(--font-serif); }
+
+/* Screen 2 */
+.tide-h1 { position: absolute; left: 2.0833vw; top: 2.0833vw; width: 79.3056vw; font: 800 max(40px, 7.4vw)/0.95 var(--font-display); color: #fff; }
+.tide-h1--one { width: auto !important; white-space: nowrap; font-size: max(30px, 6.6vw) !important; }
+.tide-h2 { position: absolute; left: 30vw; top: max(52px, 9.8611vw); white-space: nowrap; font: 800 max(40px, 7.4vw)/0.95 var(--font-display); color: #fff; }
+.stat-rule { position: absolute; left: 75.1389vw; top: var(--t); height: 1px; width: 22.7778vw; background: rgb(255 255 255 / 0.3); }
+.stat-line { display: contents; }
+.stat-fig { position: absolute; left: 75.1389vw; top: calc(var(--t) + 1.1111vw); white-space: nowrap; color: #fff; }
+.stat-body { position: absolute; left: 75.1389vw; top: calc(var(--t) + 4.4vw); width: 22.7778vw; color: #fff; }
+
+/* Screen 3 */
+.word-h1 { position: absolute; left: 2.0833vw; top: 2.0833vw; }
+.word-h2 { position: absolute; left: 55.0694vw; top: 2.0833vw; }
+.deliver li { width: auto !important; white-space: nowrap; color: #fff; }
+.t-right { text-align: right; }
+
+/* Lite stills */
+.still { position: relative; height: 100lvh; overflow: hidden; background: #010b24; }
+.still > img { position: absolute; left: 0; top: -6%; width: 100%; height: 112%; object-fit: cover; will-change: transform; }
+.still-copy { position: absolute; inset: 0; pointer-events: none; }
+
+/* ── The floating bar ── */
+.navbar { position: fixed; inset-inline: 0; bottom: calc(var(--frame-gutter) + env(safe-area-inset-bottom, 0px)); z-index: 10; display: flex; justify-content: center; pointer-events: none; opacity: 0; visibility: hidden; }
+.nav-row { position: relative; display: flex; gap: 0.1389vw; }
+.nav-pill { pointer-events: auto; display: flex; height: var(--frame-control); align-items: center; gap: max(12px, 2.2222vw); border-radius: 9999px; border: 1px solid rgb(0 0 0 / 0.1); background: #fff; padding-inline: max(16px, 3.3333vw); font: 600 var(--frame-nav)/1 var(--font-serif); color: #000; white-space: nowrap; }
+.nav-disc { display: none; pointer-events: auto; width: var(--frame-control); height: var(--frame-control); flex: none; border-radius: 9999px; border: 1px solid rgb(0 0 0 / 0.1); background: #fff; flex-direction: column; align-items: center; justify-content: center; gap: 0.22rem; }
+.nav-disc span { display: block; width: 33%; height: 1px; background: #000; }
+.nav-action { pointer-events: auto; display: flex; height: var(--frame-control); align-items: center; justify-content: center; border-radius: 9999px; background: #0051ff; padding-inline: max(24px, 3.3333vw); color: #fff; font: 600 var(--frame-nav)/1 var(--font-serif); white-space: nowrap; transition: opacity 150ms var(--ease-entrance); }
+.nav-action:hover { opacity: 0.9; }
+.nav-pill[hidden], .nav-disc[hidden] { display: none !important; }
+/* The one control left in the bar breathes, so the eye finds it. */
+.nav-action { animation: join-pulse 2.4s ease-in-out infinite; }
+@keyframes join-pulse {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgb(0 81 255 / 0.55); }
+  50%  { transform: scale(1.04); box-shadow: 0 0 0 14px rgb(0 81 255 / 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgb(0 81 255 / 0); }
+}
+@media (prefers-reduced-motion: reduce) { .nav-action { animation: none; } }
+.nav-menu { position: absolute; bottom: calc(100% + 0.75rem); left: 0; z-index: 10; display: flex; flex-direction: column; gap: 0.25rem; border-radius: 1.5rem; padding: 1rem 1.5rem; background: #fff; border: 1px solid rgb(0 0 0 / 0.1); font: 600 var(--frame-nav)/1 var(--font-serif); color: #000; pointer-events: auto; opacity: 0; }
+.nav-menu[hidden] { display: none; }
+.nav-menu a { padding-block: 0.5rem; }
+
+/* ── The gallery ── */
+.gallery { position: relative; height: 520lvh; background: #f0f0f0; }
+.gallery-rise { position: absolute; inset-inline: 0; bottom: 0; height: 260lvh; pointer-events: none; }
+.gallery-stage { position: sticky; top: 0; height: 100lvh; overflow: hidden; }
+.g-rule { position: absolute; inset-block: 0; width: 1px; background: rgb(0 0 0 / 0.1); }
+.strip { position: absolute; inset: 0; perspective: 60rem; }
+.strip > div { height: 100%; width: 100%; transform-style: preserve-3d; }
+.strip ul { position: relative; height: 100%; width: 100%; transform-style: preserve-3d; }
+.strip li { position: absolute; inset: 0; transform-style: preserve-3d; }
+.band { position: absolute; left: 50%; top: 50%; overflow: hidden; width: min(25rem, 84vw); height: calc(28rem / 18 + 0.4rem); margin-left: calc(min(25rem, 84vw) / -2); margin-top: calc((28rem / 36 + 0.2rem) * -1); }
+.band--first { border-top-left-radius: var(--radius-card); border-top-right-radius: var(--radius-card); }
+.band--last { border-bottom-left-radius: var(--radius-card); border-bottom-right-radius: var(--radius-card); }
+.band > div { position: absolute; left: 0; width: min(25rem, 84vw); height: 28rem; }
+.band img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Gallery cards: the channel's materials, drawn in HTML */
+.card { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 1.75rem; font-family: var(--font-sans); overflow: hidden; }
+.card-tag { display: flex; justify-content: space-between; font: 700 0.75rem/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+.card-title { margin-top: 1.25rem; font: 800 1.6rem/1.1 var(--font-serif); letter-spacing: -0.02em; }
+.card-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; font: 600 0.8rem/1.2 var(--font-sans); opacity: 0.75; }
+.card--prompt { background: #010b24; color: #fff; }
+.card--prompt pre { margin: 1.25rem 0 0; padding: 1rem; border-radius: 0.8rem; background: rgb(255 255 255 / 0.07); border: 1px solid rgb(159 194 255 / 0.25); font: 500 0.78rem/1.55 var(--font-sans); color: #cfe0ff; white-space: pre-wrap; }
+.card--prompt pre b { color: #9fc2ff; font-weight: 800; }
+.card--guides { background: #fff; color: #000; }
+.card--guides ol { margin-top: 1.4rem; display: flex; flex-direction: column; }
+.card--guides li { display: flex; gap: 0.9rem; align-items: baseline; padding-block: 0.8rem; border-top: 1px solid rgb(0 0 0 / 0.1); font: 600 1rem/1.25 var(--font-sans); }
+.card--guides li span { flex: none; font: 800 1.3rem/1 var(--font-serif); color: #0051ff; width: 1.6rem; }
+.card--video { background: #0051ff; color: #fff; }
+.card-play { margin: auto; width: 5.5rem; height: 5.5rem; border-radius: 50%; border: 1px solid rgb(255 255 255 / 0.5); display: grid; place-items: center; }
+.card-play::before { content: ""; margin-left: 0.35rem; border-left: 1.4rem solid #fff; border-top: 0.85rem solid transparent; border-bottom: 0.85rem solid transparent; }
+.card--video .card-title { margin-top: 0; font-size: 1.6rem; }
+.card--video .card-foot { margin-top: 1rem; }
+.card--case { background: #ededed; color: #000; }
+.card--case blockquote { margin: 1.5rem 0 0; font: 700 1.3rem/1.25 var(--font-serif); letter-spacing: -0.01em; }
+.card-avatar { width: 2.6rem; height: 2.6rem; border-radius: 50%; background: linear-gradient(135deg, #9fc2ff, #0051ff); }
+.g-overlay { opacity: 0; visibility: hidden; }
+.steps > li { position: absolute; inset-block: 0; left: var(--l); width: 27.7778vw; text-align: var(--a); }
+.steps h3 { position: absolute; inset-inline: 0; top: 2.0833vw; white-space: nowrap; font: 800 5.6vw/0.95 var(--font-display); color: #000; }
+.steps .sb p { position: absolute; inset-inline: 0; top: 45.1389vw; color: #000; }
+
+/* ── The closing plane ── */
+.closing-wrap { position: absolute; inset: 0; overflow: hidden; perspective: 70rem; pointer-events: none; }
+.closing-panel { position: absolute; inset-inline: 0; bottom: 0; height: 100%; background: #0051ff; transform-origin: 50% 100%; transform: translateY(116%) rotateX(36deg); }
+.closing { position: relative; height: 100lvh; overflow: hidden; }
+.closing-h { position: absolute; left: 2.0833vw; top: 2.0833vw; white-space: nowrap; font: 800 15.4vw/0.95 var(--font-display); color: #fff; transform: translate3d(0, calc((1 - var(--closing-travel, 0)) * 3.8vw), 0); }
+.closing-fig { pointer-events: none; position: absolute; left: 50%; top: 0; height: 81%; width: auto; translate: -50% 0; }
+.closing-copy { position: absolute; inset: 0; transform: translate3d(0, calc((1 - var(--closing-travel, 0)) * -3.6vw), 0); }
+.pill-mail { pointer-events: auto; position: absolute; left: 51.5278vw; top: 40.4167vw; display: flex; height: 13.0556vw; width: 46.3889vw; align-items: center; border-radius: 34.7222vw; background: #fff; padding-left: 11.9444vw; font: 700 var(--frame-lead)/1 var(--font-serif); color: #000; }
+.pill-mail span { display: block; will-change: transform; }
+
+
+/* ── Reviews: rises out of the dark word screen into a swipeable strip ── */
+.reviews { position: relative; z-index: 2; margin-top: -45lvh; pointer-events: none; }
+.reviews-fade { height: 45lvh; background: linear-gradient(to bottom, rgb(1 11 36 / 0) 0%, rgb(1 11 36 / 0.7) 55%, #010b24 100%); }
+.reviews-inner { pointer-events: auto; background: #010b24; color: #fff; padding: max(24px, 2vw) 0 max(96px, 8vw); }
+.reviews-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-inline: var(--frame-gutter); opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease-entrance), transform 700ms var(--ease-entrance); }
+.reviews-head.is-in { opacity: 1; transform: none; }
+.reviews-title { font: 800 max(34px, 4.6vw)/0.95 var(--font-display); letter-spacing: -0.045em; }
+.reviews-lead { margin-top: max(12px, 1vw); padding-inline: var(--frame-gutter); max-width: 640px; font: 500 var(--frame-body)/1.35 var(--font-sans); color: rgb(255 255 255 / 0.7); }
+.reviews-arrows { display: flex; gap: 10px; flex: none; }
+.reviews-arrow { width: max(46px, 3.4vw); height: max(46px, 3.4vw); border-radius: 50%; border: 1px solid rgb(255 255 255 / 0.3); color: #fff; font: 600 max(18px, 1.3vw)/1 var(--font-sans); transition: background-color 150ms var(--ease-entrance), color 150ms var(--ease-entrance); }
+.reviews-arrow:hover { background: #fff; color: #010b24; }
+.reviews-track { display: flex; gap: max(14px, 1.4vw); margin-top: max(24px, 2.4vw); padding: 4px var(--frame-gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--frame-gutter); scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; }
+.reviews-track::-webkit-scrollbar { display: none; }
+.reviews-track.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.review { flex: 0 0 min(380px, 80vw); scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; padding: 16px 16px 20px; border-radius: 24px; background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.12); opacity: 0; transform: translateY(32px); transition: opacity 700ms var(--ease-entrance), transform 700ms var(--ease-entrance); }
+.review.is-in { opacity: 1; transform: none; }
+.review:nth-child(2) { transition-delay: 80ms; } .review:nth-child(3) { transition-delay: 160ms; } .review:nth-child(4) { transition-delay: 240ms; }
+.review-photo { display: grid; place-items: center; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 16px; border: 1px dashed rgb(255 255 255 / 0.3); background: rgb(255 255 255 / 0.04); font: 600 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: rgb(255 255 255 / 0.45); }
+.review-photo img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.review-tag { align-self: flex-start; padding: 6px 10px; border-radius: 999px; background: #0051ff; font: 700 11px/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; }
+.review-quote { margin: 0; font: 600 max(16px, 1.2vw)/1.4 var(--font-sans); letter-spacing: -0.01em; }
+.review-who { margin-top: auto; display: flex; align-items: center; gap: 10px; font: 500 13px/1.3 var(--font-sans); color: rgb(255 255 255 / 0.7); }
+.review-who b { color: #fff; font-weight: 700; }
+.review-avatar { flex: none; width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #9fc2ff, #0051ff); }
+.reviews-dots { display: flex; justify-content: center; gap: 6px; margin-top: 18px; }
+.reviews-dot { width: 6px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.3); transition: width 250ms var(--ease-entrance), background-color 250ms var(--ease-entrance); }
+.reviews-dot.is-on { width: 20px; background: #fff; }
+@media (prefers-reduced-motion: reduce) { .reviews-head, .review { opacity: 1; transform: none; transition: none; } }
+
+/* ── The closing screen, now a section of its own ── */
+.closing-section { position: relative; background: #0051ff; }
+
+/* ── stacked: the windows the bottom band cannot be laid out in ── */
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  :root { --frame-navbar: var(--frame-control); }   /* one plate now: the join button */
+  .sb.stack { display: flex; height: auto; flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: var(--frame-gutter); }
+  .sb.stack.underbar { padding-bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); }
+  .sb.stack > * { position: static; width: 100%; white-space: normal; }
+  .notes { display: flex; flex-wrap: wrap; gap: 1.5rem 0.25rem; }
+  .notes > * { position: static; width: auto; }
+  .actions { display: flex; width: 100%; align-items: center; gap: 1.25rem; padding-top: 0.5rem; }
+  .actions > * { position: static; }
+  .btn-book { width: auto; flex: 1; padding-inline: 1.5rem; }
+
+  .name { top: 7lvh; font-size: 20.5vw; }
+  .tide-h1 { left: var(--frame-gutter); top: var(--frame-heading-top); width: calc(100% - var(--frame-gutter) * 2); font-size: max(40px, 8.6111vw); }
+  .tide-h2 { left: calc(var(--frame-gutter) + 16px); top: calc(var(--frame-heading-top) + 36px); }
+  .stat { display: flex; flex-direction: column; gap: 0.25rem; }
+  .stat-rule { position: static; width: 100%; }
+  .stat-line { display: flex; gap: 0.75rem; align-items: baseline; }
+  .stat-fig, .stat-body { position: static; width: auto; }
+
+  .word-h1 { left: var(--frame-gutter); top: var(--frame-heading-top); }
+  .word-h2 { left: calc(var(--frame-gutter) + 16px); top: calc(var(--frame-heading-top) + 36px); }
+  .deliver { display: flex; flex-direction: column; gap: 0.35rem; }
+  .deliver li { position: static; width: auto; }
+  .t-right { text-align: left; }
+
+  .nav-pill { display: none; }
+  .nav-disc { display: flex; }
+  .navbar { padding-inline: var(--frame-gutter); }
+  .nav-row { gap: 0.75rem; width: 100%; }
+  .nav-action { flex: 1; }
+
+  .g-rule { display: none; }
+  .steps { position: absolute; inset-inline: 0; bottom: 0; display: flex; flex-direction: column; gap: 1.25rem; background: rgb(240 240 240 / 0.85); padding: var(--frame-gutter); padding-bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .steps { gap: 0.9rem !important; padding-top: 18px !important; }
+  .steps > li { position: static; width: auto; text-align: left; display: flex; flex-direction: column; gap: 0.25rem; }
+  .steps h3 { position: static; font-size: 24px !important; line-height: 1 !important; }
+  .steps .sb p { font-size: 13px; }
+  .steps .sb { position: static; height: auto; }
+  .steps .sb p { position: static; }
+
+  .closing-h { left: var(--frame-gutter); top: var(--frame-gutter); font-size: 15vw; }
+  .closing-fig { top: 9lvh; height: 58%; }
+  .closing-copy .sb.stack { gap: 1rem; }
+  .pill-mail { position: static; width: 100%; height: calc(var(--frame-control) * 1.4); font-size: 20px; justify-content: center; border-radius: 9999px; padding: 0 1rem; }
+}
+/* Phones: the carousel is swiped, so no arrows; the heading gets the full width. */
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  .reviews-arrows { display: none; }
+  .reviews-title { font-size: 34px; }
+}
+/* Phones: lift everything anchored to the stage's foot above the browser toolbar. */
+@media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
+  .hero-col { bottom: calc(var(--frame-gutter) + var(--ui-cover)); gap: 12px; }
+  .inside-col, .who-col { bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2 + var(--ui-cover)); }
+  .sb.stack { padding-bottom: calc(var(--frame-gutter) + var(--ui-cover)); }
+  .sb.stack.underbar { padding-bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2 + var(--ui-cover)); }
+  .steps { padding-bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2 + var(--ui-cover)) !important; }
+}
+</style>
+</head>
+<body>
+<script>history.scrollRestoration = "manual";</script>
+
+<div class="preloader" data-preloader>
+  <p role="status" aria-live="polite"><span data-count>0</span><span class="sr-only"> процентов загружено</span></p>
+</div>
+<noscript><style>[data-preloader]{display:none!important}</style></noscript>
+
+<div class="load-errors" data-load-errors role="alert"></div>
+
+<main data-marker>
+  <section class="hero" id="top">
+    <h2 class="sr-only">3D-скан автора на белой студийной сцене</h2>
+    <div class="runway" data-runway>
+      <span class="anchor" id="method" data-anchor style="top: 216lvh"></span>
+      <span class="anchor" id="deliverables" data-anchor style="top: 480lvh"></span>
+
+      <div class="stage" data-stage>
+        <!-- Layer 0: the name, behind the canvas -->
+        <div class="layer" data-scene-layer="0">
+          <h1 class="name" data-scene-ink>localhost:</h1>
+        </div>
+
+        <div class="canvas-box" data-canvas-box>
+          <img class="poster" data-poster alt="" hidden>
+          <canvas aria-hidden="true"></canvas>
+        </div>
+
+        <!-- Layer 1: the first screen's copy -->
+        <div class="layer layer--over" data-scene-layer="1" style="--stage-reveal: 0">
+          <div class="sf">
+            <p class="name-sub" data-name-sub data-rise="0.06">Закрытый Telegram-канал</p>
+            <p class="name-sub" data-name-by data-rise="0.06">by <a href="https://www.instagram.com/polinext.production/" target="_blank" rel="noopener">polinext.production</a></p>
+            <div class="hero-col">
+              <p class="t-lead ink" data-rise="0.12">Промпты, пошаговые руководства и рабочие приёмы для создания сайтов, приложений и AI-сервисов через Claude и Codex — <span class="lead-accent">всё в одной подписке!</span></p>
+              <p class="price-line" data-rise="0.26"><span class="price-small">Первый месяц — 2 990 ₽, продление —</span> <span class="price-tail"><strong class="price-big">1 990 ₽</strong><span class="price-small">/мес</span></span></p>
+              <div class="hero-actions" data-stage-rule data-rise="0.38">
+                <a class="btn-book" href="#book">Вступить в канал</a>
+                <a class="hero-more" href="#method">Что внутри</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layer 2: the tide -->
+        <div class="layer layer--over layer--hidden" data-scene-layer="2">
+          <div class="sf">
+            <h2 class="tide-h1 tide-h1--one" data-scene-ink>Что внутри канала</h2>
+            <div class="inside-col">
+              <ul class="inside-list">
+                <!-- Photo slots: replace the inner <span>фото</span> with <img src="photo.jpg" alt=""> -->
+                <li data-rise="0.06"><span class="inside-text"><b>10–15</b> новых готовых промптов с инструкциями каждый месяц</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
+                <li data-rise="0.14"><span class="inside-text">Пошаговые руководства</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
+                <li data-rise="0.22"><span class="inside-text">Видео-уроки</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
+                <li data-rise="0.3"><span class="inside-text">Фишки и лайфхаки для работы с Claude, Codex</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
+              </ul>
+              <p class="inside-note" data-rise="0.4">С подпиской вы получаете доступ и к тому, что уже опубликовано, и ко всем обновлениям в течение оплаченного периода.</p>
+              <p class="inside-save" data-rise="0.5">22 000 ₽<span class="save-tag">экономия</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layer 3: the word -->
+        <div class="layer layer--over layer--hidden" data-scene-layer="3">
+          <div class="sf">
+            <h2 class="word-h1 display-h" data-reveal="letter">Кому подойдёт:</h2>
+            <ol class="who-col">
+              <li data-rise="0.06">
+                <span class="who-num">01</span>
+                <h3 class="who-title">Новичкам с нуля</h3>
+                <p class="who-text">Пошаговые инструкции: как установить и оплатить Claude и как с первых дней правильно им пользоваться.</p>
+              </li>
+              <li data-rise="0.16">
+                <span class="who-num">02</span>
+                <h3 class="who-title">Продвинутым</h3>
+                <p class="who-text">Тем, кто уже знаком с нейросетями и Claude: готовые промпты и инструкции, которые прокачают навыки дизайна и проектирования структуры сайта.</p>
+              </li>
+              <li data-rise="0.26">
+                <span class="who-num">03</span>
+                <h3 class="who-title">Digital-специалистам</h3>
+                <p class="who-text">Видео-уроки и инструкции с кейсами и примерами: как применять вайбкодинг под разные задачи и цели бизнеса. Усилят ваши текущие знания и поднимут чек на проектах.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews and student cases: a swipeable carousel. The cards are built from REVIEWS in the script. -->
+  <section class="reviews" id="reviews" aria-labelledby="reviews-title">
+    <div class="reviews-fade" aria-hidden="true"></div>
+    <div class="reviews-inner">
+      <div class="reviews-head">
+        <h2 id="reviews-title" class="reviews-title">Отзывы и кейсы учеников</h2>
+        <div class="reviews-arrows">
+          <button type="button" class="reviews-arrow" data-reviews-prev aria-label="Предыдущий отзыв">←</button>
+          <button type="button" class="reviews-arrow" data-reviews-next aria-label="Следующий отзыв">→</button>
+        </div>
+      </div>
+      <p class="reviews-lead">Что ученики собрали по материалам канала — сайты, приложения и AI-сервисы.</p>
+      <ul class="reviews-track" data-reviews-track data-lenis-prevent></ul>
+      <div class="reviews-dots" data-reviews-dots aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="closing-section" id="book" aria-label="Стоимость подписки">
+    <div class="closing" data-closing style="--stage-reveal: 0">
+      <div class="sf">
+        <h2 class="closing-h" data-reveal="letter">Подписка</h2>
+      </div>
+      <img class="closing-fig" data-asset="hero/model-cutout.webp" alt="" width="1300" height="1872">
+      <div class="closing-copy">
+        <div class="sf">
+          <div class="sb stack">
+            <p class="pos t-lead imm nowrap" style="--l: 2.0833vw; --t: 40.4167vw" data-reveal="word" data-rise="0.12">Первый месяц — 2 990 ₽</p>
+            <p class="pos t-body imm" style="--l: 2.0833vw; --t: 49.3056vw; --w: 27.2222vw" data-rise="0.26">В стоимость входят материалы, которые уже опубликованы, и новые материалы за время вашей подписки. Продление — 1 990 ₽ в месяц.</p>
+            <a class="pill-mail" href="https://t.me/" target="_blank" rel="noopener" data-join data-rise="0.38" data-magnetic><span>Вступить в закрытый канал</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="navbar" data-navbar>
+  <div class="nav-row">
+    <nav class="nav-pill" aria-label="Разделы" hidden>
+      <a href="#method">Что внутри</a>
+      <a href="#deliverables">Кому подойдёт</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#book">Стоимость</a>
+    </nav>
+    <button class="nav-disc" type="button" hidden data-nav-disc aria-expanded="false" aria-controls="nav-menu" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    <div class="nav-menu" id="nav-menu" data-nav-menu hidden>
+      <a href="#method">Что внутри</a>
+      <a href="#deliverables">Кому подойдёт</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#book">Стоимость</a>
+    </div>
+    <a class="nav-action" data-nav-item data-nav-shell data-nav-from-left href="#book">Вступить за 2 990 ₽</a>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import Lenis from "lenis";
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Constants
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const ASSET_BASE_URL = "https://storage.getlayers.ai/assets/ai-creator-507c4a0834";
+const asset = (path) => `${ASSET_BASE_URL}/${path}`;
+
+const sceneConfig = {
+  modelUrl: ASSET_BASE_URL + "/hero/model.glb",
+  dracoDecoderPath: "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/libs/draco/gltf/",
+  tierReloadSettleMs: 400,
+  lite: {
+    modelUrl: ASSET_BASE_URL + "/hero/model-lite.glb",
+    runwayViewports: 2.2,
+    turns: 0.22,
+    stillParallax: { travel: 12, spring: { tension: 90, friction: 26, clamp: true } },
+  },
+  camera: {
+    fov: 35, near: 0.01, far: 100,
+    fitMargin: 1.02, targetHeightRatio: 0.06, elevationRatio: 0.1,
+    mobile: { fitMargin: 1.16, targetHeightRatio: 0 },
+  },
+  lighting: {
+    environmentIntensity: 0.32, environmentBlur: 0.02,
+    keyIntensity: 3.9, keyPosition: [-2.3, 2.9, 2.6],
+    rimIntensity: 3.0, rimPosition: [2.7, 1.5, -2.2],
+    toneMappingExposure: 1.04,
+  },
+  shadow: { mapSize: 1024, extentRatio: 1.1, depthMarginRatio: 1.25, bias: -0.0005, normalBias: 0.03 },
+  material: { enabled: true, metalness: 0, roughness: 0.58, computeTangents: true, normalScale: 0.7, normalTangentSign: 1 },
+  fade: { startRatio: -0.42, endRatio: -0.82, meshStartRatio: -0.42, meshEndRatio: -0.7 },
+  inkLetters: {
+    spread: 0.6, ease: 2,
+    entrance: { tension: 62, friction: 30, clamp: true },
+    exit: { tension: 90, friction: 34, clamp: true },
+  },
+  arrival: {
+    approach: 0.7, rise: 0.2, edge: 0.12, noiseScale: 2.4, noiseDrift: 0.35,
+    spring: { tension: 58, friction: 22, clamp: true },
+    inkDelay: 120,
+    copyStagger: [0.12, 0.26, 0.38, 0.48], copySpan: 0.45,
+  },
+  closingParallax: { heading: 3.8, copy: -3.6 },
+  pointerGlow: { radiusRatio: 0.28, dim: 0.26, lift: 2.6, haloLift: 4.2, follow: 9 },
+  stageNav: {
+    itemStagger: 0.08,
+    enter: { tension: 150, friction: 24 },
+    leave: { tension: 190, friction: 30, clamp: true },
+  },
+  prewarmStops: [0, 0.25, 0.5, 0.75, 1],
+  stageInk: { minScale: 2, maxSize: 4096 },
+  stageRule: {
+    frameRatio: 0.555556, topRatio: 0.414583, immersedTopRatio: 0.430556,
+    markerGap: 0.0208, thickness: 1, immersedOpacity: 0.3, immersedLayer: 3,
+  },
+  brush: {
+    points: 32, radiusRatio: 0.42, lifetimeSeconds: 0.7, minStepRatio: 0.055, taper: 0.18,
+    tailFade: 1, threshold: 0.34, wobble: 0.3, noiseScale: 5.5, noiseDrift: 0.07, wash: 1,
+  },
+  tideField: {
+    scale: 0.45, speed: 0.33, spread: 0.07, rise: 0.3, threshold: 0.63, ember: 0.15, lick: 0.2,
+    roughness: 0.5, lacunarity: 1.8, contrast: 1.5, midpoint: 0.5, sink: 0.42, glow: 0.3,
+    vignette: 0.5, pointerRadius: 0.9, pointerStrength: 0.5, wake: 4, parallax: 0.01,
+    scrollDrift: 0.45, scrollSurge: 0.045, scrollResponse: 0.4,
+    pointerLead: 0.105, pointerBody: 0.043, ditherAmount: 1.2,
+  },
+  wireframe: {
+    cellRatio: 0.032, surfaceOffsetRatio: 0.004, opacity: 1, immersedOpacity: 0.42,
+    haloScale: 1, haloOpacity: 0.16, glowNoiseScale: 1.7, glowFloor: 0.45, glowRange: 0.55,
+    polygonOffsetFactor: 1, polygonOffsetUnits: 1,
+  },
+  particles: {
+    sizeRatio: 0.075, opacity: 1, gain: 1.9, falloff: 1.5, glowInfluence: 0.85,
+    latticeScale: 0.85, latticeShrink: 0.7,
+  },
+  grain: { intensity: 0.17, fps: 24 },
+  motion: {
+    turn: { stiffness: 42, damping: 13 },
+    idleSwayAmplitude: 0.14, idleSwaySpeed: 0.35,
+    pointerTilt: 0.32, pointerDamping: 4.5, maxDeltaSeconds: 1 / 20,
+  },
+  stages: {
+    runwayViewports: 7,
+    tide: { from: 0.067, to: 0.28 },
+    deep: { from: 0.387, to: 0.52 },
+    morph: { from: 0.44, to: 0.74 },
+    lineFrom: -0.04, lineTo: 1.04,
+    bowHeight: 0.055, bowSpeed: 0.4, bowResponse: 0.16, edgePixels: 0.75,
+  },
+  rotation: { from: 0, to: 0.74, turns: 1 },
+  spin: { from: 0.74, to: 1, turns: 1 },
+  chrome: {
+    metalness: 1, roughness: 0.12, tint: 1, falloff: 1.4, envMapIntensity: 13,
+    environment: {
+      width: 1024, height: 512,
+      sky: [0.5, 0.36, 0.1], ground: [0.08, 0.2], horizon: 0.52,
+      bands: [{ at: 0.28, half: 0.06, value: 1 }, { at: 0.74, half: 0.1, value: 0.5 }],
+      strips: [
+        { at: 0.08, half: 0.02, value: 1 }, { at: 0.34, half: 0.012, value: 0.85 },
+        { at: 0.63, half: 0.03, value: 1 }, { at: 0.86, half: 0.014, value: 0.7 },
+      ],
+    },
+  },
+  bloom: { strength: 0.42, radius: 0.5, threshold: 0.95 },
+  text: {
+    modelUrl: ASSET_BASE_URL + "/hero/AI.glb",
+    widthRatio: 1.12, maxHeightRatio: 1.12, cellRatio: 0.017,
+    bustFadeEnd: 0.28, sparkFadeFrom: 0.06, sparkFadeTo: 0.34,
+    latticeFadeFrom: 0.82, latticeFadeTo: 0.98, morphStagger: 0.55,
+    fill: { from: 0.76, to: 0.99 }, fillEdge: 0.03, fillRim: 0.55,
+    accentSpin: 0.16, accentSpinFrom: 0.86,
+  },
+  inViewRootMargin: "100% 0px",
+};
+
+const galleryConfig = {
+  card: { width: 25, maxWidthVw: 84, height: 28, bands: 18, bandBleed: 0.2 },
+  box: { faceHalf: 28, corner: 1.5, reach: 26, step: 31, perspective: 60, startIndex: 1 },
+  panel: { perspective: 70, tilt: 36, startOffset: 116, landAt: 0.82 },
+  process: { floor: 0.16, arriveAt: 0.16, stagger: 0.11, span: 0.16, bodyLag: 0.05 },
+  scroll: { runwayViewports: 5.2, riseStartViewports: 2.6 },
+  overshoot: 1.5,
+};
+
+const preloaderConfig = {
+  minShow: 1800, hold: 0.9,
+  fill:   { tension: 26,  friction: 34, clamp: true },
+  finish: { tension: 110, friction: 30, clamp: true },
+  exit:   { tension: 140, friction: 32, clamp: true },
+  releaseAt: 0.5,
+};
+
+const magneticConfig = { pull: 0.22, config: { tension: 150, friction: 26 } };
+
+const LAYER_WINDOWS = [
+  { in: 0,    hold: 0,    out: 0,    end: 0.26 },
+  { in: 0,    hold: 0,    out: 0,    end: 0.12 },
+  { in: 0.28, hold: 0.28, out: 0.44, end: 0.48, auto: true },
+  { in: 0.56, hold: 0.72, out: 1,    end: 1 },
+];
+const LITE_WINDOWS = [{ in: 0, hold: 0, out: 1, end: 1 }, { in: 0, hold: 0, out: 1, end: 1 }];
+
+/** Where "Вступить в закрытый канал" leads. Put the channel's invite link here. */
+const TELEGRAM_URL = "https://t.me/";
+
+/**
+ * Reviews and student cases, one card each. PLACEHOLDERS — replace with real ones.
+ * tag: "Кейс" or "Отзыв"; photo: a file path (e.g. "reviews/anna.jpg") or "" for an empty slot.
+ */
+const REVIEWS = [
+  { tag: "Кейс", name: "Имя Фамилия", project: "Сайт для студии", photo: "", text: "Здесь будет кейс ученика: что он собрал по материалам канала и какой получил результат." },
+  { tag: "Отзыв", name: "Имя Фамилия", project: "Новичок в вайбкодинге", photo: "", text: "Здесь будет отзыв ученика — с чего начинал, что получилось и чем помог канал." },
+  { tag: "Кейс", name: "Имя Фамилия", project: "AI-сервис / Telegram-бот", photo: "", text: "Здесь будет кейс: задача, как решали через Claude или Codex, что вышло в итоге." },
+  { tag: "Отзыв", name: "Имя Фамилия", project: "Digital-специалист", photo: "", text: "Здесь будет отзыв: как материалы канала помогли в работе с клиентами и проектами." },
+  { tag: "Кейс", name: "Имя Фамилия", project: "Веб-приложение", photo: "", text: "Здесь будет кейс ученика со скриншотом проекта и коротким описанием результата." },
+  { tag: "Отзыв", name: "Имя Фамилия", project: "Дизайнер", photo: "", text: "Здесь будет отзыв ученика о промптах и пошаговых руководствах из канала." },
+];
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Small helpers
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+const clamp01 = (v) => clamp(v, 0, 1);
+const window01 = (v, from, to) => clamp((v - from) / (to - from), 0, 1);
+const smoothstep01 = (v, from, to) => { const t = window01(v, from, to); return t * t * (3 - 2 * t); };
+const lineAt = (progress, span) => -0.04 + (1.04 - -0.04) * window01(progress, span.from, span.to);
+const shuffledSeed = (index, length) => { const h = Math.sin(index * 127.1 + 311.7) * 43758.5453; return length > 1 ? h - Math.floor(h) : 0; };
+const nextFrame = () => new Promise((r) => requestAnimationFrame(r));
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const STACKED = matchMedia("(max-width: 1179px) and (max-aspect-ratio: 1/1)");
+const HOVER = matchMedia("(hover: hover)");
+
+/** A failed asset must be visible on the page, not only in the console. */
+const reportedFailures = new Set();
+const reportFailure = (url, error) => {
+  if (error) console.error(`[load] ${url}`, error);
+  if (reportedFailures.has(url)) return;
+  reportedFailures.add(url);
+  const host = document.querySelector("[data-load-errors]");
+  if (!host) return;
+  const line = document.createElement("p");
+  line.textContent = `Failed to load: ${url}`;
+  host.append(line);
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Device tier — read once
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const readTier = () => {
+  const coarse = matchMedia("(hover: none) and (pointer: coarse)").matches;
+  return innerWidth < 768 || coarse ? "mobile" : innerWidth < 1180 ? "tablet" : "desktop";
+};
+const TIER = readTier();
+// The full choreography runs on every device: phones keep the lighter model,
+// one pixel per CSS pixel and capped textures (see the tier settings), not a cut-down show.
+const LITE = false;
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The shared ticker — one rAF loop, ordered by priority
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const ticker = (() => {
+  const subscribers = [];
+  let raf = 0;
+  const loop = (time) => {
+    raf = requestAnimationFrame(loop);
+    const list = subscribers.slice();
+    for (const s of list) {
+      if (!subscribers.includes(s)) continue;
+      if (time - s.last <= s.getFramerate()) continue;
+      s.last = time;
+      try { s.callback(time); } catch (error) { console.error(error); }
+    }
+  };
+  return {
+    add(callback, { priority = 0, getFramerate = () => 0 } = {}) {
+      const s = { callback, getFramerate, last: -Infinity, priority };
+      subscribers.push(s);
+      subscribers.sort((a, b) => a.priority - b.priority);
+      if (!raf) raf = requestAnimationFrame(loop);
+      return () => {
+        const i = subscribers.indexOf(s);
+        if (i >= 0) subscribers.splice(i, 1);
+        if (subscribers.length === 0 && raf) { cancelAnimationFrame(raf); raf = 0; }
+      };
+    },
+  };
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The spring — react-spring's convention, a fixed 1ms step
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const SPRING_DEFAULT = { tension: 170, friction: 26, clamp: false };
+
+class Spring {
+  constructor(value = 0, onChange = () => {}) {
+    this.x = value; this.v = 0; this.target = value;
+    this.onChange = onChange; this.cfg = SPRING_DEFAULT;
+    this.unsub = null; this.prev = 0; this.onRest = null; this.startSign = 0;
+  }
+  get value() { return this.x; }
+  to(target, cfg = {}, onRest = null) {
+    this.target = target; this.cfg = { ...SPRING_DEFAULT, ...cfg }; this.onRest = onRest;
+    if (REDUCED) { this.x = target; this.v = 0; this.onChange(target); this.stop(true); return this; }
+    if (this.x === target && this.v === 0) { this.stop(true); return this; }
+    this.startSign = Math.sign(target - this.x);
+    if (!this.unsub) { this.prev = performance.now(); this.unsub = ticker.add((t) => this.step(t)); }
+    return this;
+  }
+  step(time) {
+    const ms = Math.max(1, Math.min(64, Math.round(time - this.prev)));
+    this.prev = time;
+    const { tension, friction, clamp: clamped } = this.cfg;
+    let done = false;
+    for (let i = 0; i < ms; i++) {
+      this.v += (-tension * (this.x - this.target) - friction * this.v) * 0.001;
+      this.x += this.v * 0.001;
+      if (clamped && Math.sign(this.target - this.x) !== this.startSign) { done = true; break; }
+      if (Math.abs(this.x - this.target) < 1e-4 && Math.abs(this.v) < 1e-4) { done = true; break; }
+    }
+    if (done) { this.x = this.target; this.v = 0; }
+    this.onChange(this.x);
+    if (done) this.stop(true);
+  }
+  stop(fire) {
+    if (this.unsub) { this.unsub(); this.unsub = null; }
+    if (fire) { const rest = this.onRest; this.onRest = null; if (rest) rest(); }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Scroll triggers — measured inside the ticker
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const EDGE = { top: (bb) => bb.top, center: (bb) => bb.top + bb.height / 2, bottom: (bb) => bb.bottom };
+const VIEW = { top: 0, center: 0.5, bottom: 1 };
+const triggerPosition = (spec, bb, H) => { const [edge, view] = spec.split(" "); return EDGE[edge](bb) - VIEW[view] * H; };
+
+const scrollTrigger = (el, start, end, callback) => {
+  let last = NaN, inView = false, trailing = 0, unsub = null;
+  const measure = () => {
+    const bb = el.getBoundingClientRect(), H = innerHeight;
+    const s = triggerPosition(start, bb, H), e = triggerPosition(end, bb, H);
+    const length = Math.abs(s - e) || 1;
+    const progress = clamp(1 - (s + length) / length, 0, 1);
+    if (progress !== last) { last = progress; callback(progress); }
+  };
+  const tick = () => {
+    measure();
+    if (!inView && ++trailing > 10 && unsub) { unsub(); unsub = null; }
+  };
+  const io = new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    if (inView) { trailing = 0; if (!unsub) unsub = ticker.add(tick, { getFramerate: () => 10 }); }
+  }, { threshold: 0 });
+  io.observe(el);
+  measure();
+  return { measure, get progress() { return last; } };
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The shader module — verbatim
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/** Object-space position, shared by the brush mask, the bottom fade and the
+ *  wireframe's glow. */
+const varyingDeclaration = `
+  varying vec3 vScenePosition;
+`;
+
+/**
+ * The chrome rising through the word.
+ *
+ * Object space, not screen space: the word turns a full revolution while this
+ * sweeps, and a screen-space line would slide across the letters as they came
+ * round. Anchored to the word's own vertical extent, the level stays where it
+ * was poured.
+ */
+const wordFillFunction = `
+  uniform float uWordFill;
+  uniform float uWordFillFrom;
+  uniform float uWordFillTo;
+  uniform float uWordFillEdge;
+
+  /** 1 below the level, 0 above it. */
+  float wordFill(vec3 p) {
+    float height =
+      (p.y - uWordFillFrom) / max(1e-4, uWordFillTo - uWordFillFrom);
+    return 1.0 - smoothstep(
+      uWordFill - uWordFillEdge,
+      uWordFill + uWordFillEdge,
+      height
+    );
+  }
+`;
+
+/**
+ * The uniform half — safe in a fragment shader, which an `attribute` is not.
+ * `MORPH_FROM` is what tells a material which side of the hand-over it is on.
+ */
+const morphFadeFunctions = `
+  uniform float uMorph;
+  uniform float uBustFade;
+  uniform float uLatticeFade;
+  uniform float uLatticeSparkFade;
+
+  #ifdef MORPH_FROM
+    float morphFade() { return uLatticeFade; }
+    float morphSparkFade() { return uLatticeSparkFade; }
+  #else
+    float morphFade() { return uBustFade; }
+    float morphSparkFade() { return uBustFade; }
+  #endif
+`;
+
+/** The vertex half. Only the word's lattice actually travels — the bust's mesh
+ *  stays where it is and leaves by fading, so its `morphed` is the identity and
+ *  it carries no `aMorph` data at all. */
+const morphFunctions = `
+  ${morphFadeFunctions}
+
+  #ifdef MORPH_FROM
+    attribute vec3 aMorph;
+    attribute float aDelay;
+    uniform float uMorphStagger;
+
+    /**
+     * Every node used to travel on the same clock, and a cloud that leaves and
+     * arrives all at once is a cloud with no shape at any moment in between —
+     * which is exactly what the middle of the transition looked like. Each node
+     * now has its own window inside the morph: it waits aDelay of the way in,
+     * then eases across what is left. The windows all close at 1, so the word is
+     * whole on time; what changes is that it *assembles* rather than appearing.
+     */
+    vec3 morphed(vec3 p) {
+      float span = max(0.001, 1.0 - uMorphStagger);
+      float t = clamp((uMorph - aDelay * uMorphStagger) / span, 0.0, 1.0);
+      return mix(aMorph, p, t * t * (3.0 - 2.0 * t));
+    }
+  #else
+    vec3 morphed(vec3 p) { return p; }
+  #endif
+`;
+
+/** Everything a junction spark needs that is constant across its own quad. */
+const sparkVaryings = `
+  varying float vSparkBrush;
+  varying float vSparkBody;
+`;
+
+const vertexAssignment = `
+  vScenePosition = position;
+`;
+
+/** Simplex noise, shared by the tide field and the wireframe's glow. */
+const noiseFunctions = `
+  vec2 sceneHash2(vec2 p) {
+    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+    return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+  }
+
+  float sceneNoise(vec2 p) {
+    const float K1 = 0.366025404, K2 = 0.211324865;
+    vec2 i = floor(p + (p.x + p.y) * K1);
+    vec2 a = p - i + (i.x + i.y) * K2;
+    float m = step(a.y, a.x);
+    vec2 o = vec2(m, 1.0 - m);
+    vec2 b = a - o + K2;
+    vec2 c = a - 1.0 + 2.0 * K2;
+    vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
+    vec3 n = h * h * h * h * vec3(
+      dot(a, sceneHash2(i)), dot(b, sceneHash2(i + o)), dot(c, sceneHash2(i + 1.0))
+    );
+    return dot(n, vec3(70.0));
+  }
+`;
+
+/** The drawing-buffer size in device pixels. Declared on its own because three
+ *  chunks want it — the stage lines, the tide and the mark — and a uniform may
+ *  be declared only once per shader stage. */
+const resolutionUniform = `
+  uniform vec2 uResolution;
+`;
+
+/**
+ * The mark the pointer leaves — a smooth field cut at a hard level.
+ *
+ * (See the specification for the full rationale: a height field cut by a
+ * step, so the contour is both hard and smooth; screen-space noise; object-
+ * space stroke points projected each frame.)
+ */
+const brushMaskFunction = `
+  uniform vec4 uBrush[BRUSH_POINTS];  // xy = device px, z = radius px, w = life
+  uniform float uMarkThreshold;
+  uniform float uMarkWobble;
+  uniform float uMarkScale;
+  uniform float uMarkTime;
+  uniform float uMarkTailFade;
+
+  float brushMask(vec2 px) {
+    // The ring arrives in **stroke order**, oldest first, and each entry is
+    // joined to the next unless its radius is negative — see projectBrush.
+    //
+    // Segments, not points, and that is not a detail. A tapered stroke made of
+    // discs comes apart into beads the moment the tail's radius drops under the
+    // spacing between them, which is exactly what a taper does. A capsule is
+    // continuous by construction whatever the spacing, and its radius can run
+    // from one end to the other, which is what a tapering ribbon *is*.
+    float field = 0.0;
+    for (int i = 0; i < BRUSH_POINTS; i++) {
+      vec4 a = uBrush[i];
+      if (a.w <= 0.0) continue;
+
+      vec2 near = a.xy;
+      float radius = abs(a.z);
+      float strength = a.w;
+
+      if (a.z > 0.0 && i + 1 < BRUSH_POINTS) {
+        vec4 b = uBrush[i + 1];
+        if (b.w > 0.0) {
+          vec2 span = b.xy - a.xy;
+          float len2 = max(dot(span, span), 0.0001);
+          float t = clamp(dot(px - a.xy, span) / len2, 0.0, 1.0);
+          near = a.xy + span * t;
+          radius = mix(abs(a.z), abs(b.z), t);
+          strength = mix(a.w, b.w, t);
+        }
+      }
+
+      float reach = 1.0 - distance(px, near) / max(radius, 1.0);
+      // Weight holds until the very end of a point's life: the taper is what
+      // thins the tail, and fading it as well would eat the mark from the
+      // inside and take its length with it.
+      float weight = smoothstep(0.0, uMarkTailFade, strength);
+      field = max(field, weight * clamp(reach, 0.0, 1.0));
+    }
+    // Nothing here at all: skip the noise, which is most of the screen for most
+    // of the time.
+    if (field <= 0.0) return 0.0;
+
+    // Sampled in **screen space**, deliberately — a screen-fixed field is
+    // continuous everywhere, by construction, so the outline never tears.
+    vec2 uv = px / uResolution.y * uMarkScale;
+    float wobble = sceneNoise(uv + vec2(uMarkTime, -uMarkTime)) * uMarkWobble;
+    return step(uMarkThreshold, field + wobble);
+  }
+`;
+
+/**
+ * Bottom fade — the "fog" that keeps the bust from ending on a hard cut.
+ * Returns 1 where the model draws normally, 0 where it has dissolved.
+ */
+const bottomFadeFunction = `
+  uniform float uFadeStartY;
+  uniform float uFadeEndY;
+  uniform float uFadeMeshStartY;
+  uniform float uFadeMeshEndY;
+
+  float bottomFade(vec3 p) {
+    return smoothstep(uFadeEndY, uFadeStartY, p.y);
+  }
+
+  /**
+   * The mesh's own, much longer version of the same dissolve.
+   *
+   * It is **longer**, because the mesh fades towards transparency over a live
+   * field rather than towards a ground colour, and it **finishes higher**: the
+   * mesh has to be gone before the flat cut across the chest.
+   */
+  float meshBottomFade(vec3 p) {
+    return smoothstep(uFadeMeshEndY, uFadeMeshStartY, p.y);
+  }
+`;
+
+/**
+ * How many pieces of type the scene can paint at once, and how many units —
+ * letters or words — those pieces can be choreographed in between them.
+ */
+const INK_BOXES = 6;
+const INK_UNITS = 96;
+
+const inkFunction = `
+  #define INK_BOXES 6
+  #define INK_UNITS 96
+
+  /** Every painted piece of type, packed into one atlas. */
+  uniform sampler2D uInkTex;
+  uniform int uInkBoxCount;
+  /** Where the piece sits on screen: bottom-left corner, then size, buffer px. */
+  uniform vec4 uInkScreen[INK_BOXES];
+  /** Where its glyphs live in the atlas, normalised. */
+  uniform vec4 uInkAtlas[INK_BOXES];
+  /** The element's own colour, read back off it. */
+  uniform vec3 uInkColor[INK_BOXES];
+  /** Where this piece's units begin in uInkUnit, and how many it has. */
+  uniform vec2 uInkRange[INK_BOXES];
+  /**
+   * One entry per unit: **x** is where it starts across its piece, 0–1, and
+   * **y** is how much of it is showing.
+   */
+  uniform vec2 uInkUnit[INK_UNITS];
+  /** A shift for every painted piece, in buffer pixels. */
+  uniform vec2 uInkShift;
+
+  /**
+   * The painted type at this fragment: its colour, and how much of it is here.
+   *
+   * The pieces do not overlap on screen, so the first one containing the
+   * fragment is the answer and the loop can stop there.
+   */
+  vec4 stageInk() {
+    for (int i = 0; i < INK_BOXES; i++) {
+      if (i >= uInkBoxCount) break;
+
+      vec4 screen = uInkScreen[i];
+      vec2 place = (gl_FragCoord.xy - screen.xy - uInkShift) / screen.zw;
+      if (place.x < 0.0 || place.x > 1.0 || place.y < 0.0 || place.y > 1.0) {
+        continue;
+      }
+
+      vec4 atlas = uInkAtlas[i];
+      float cover = texture2D(uInkTex, atlas.xy + place * atlas.zw).a;
+      if (cover < 0.002) continue;
+
+      // Which unit this fragment falls in. The entries are in reading order and
+      // their starts increase, so it is the last one that begins behind the
+      // fragment — folded rather than searched, which keeps it branchless.
+      int base = int(uInkRange[i].x);
+      int count = int(uInkRange[i].y);
+      float shown = uInkUnit[base].y;
+      for (int u = 1; u < INK_UNITS; u++) {
+        if (u >= count) break;
+        vec2 unit = uInkUnit[base + u];
+        shown = mix(shown, unit.y, step(unit.x, place.x));
+      }
+
+      return vec4(uInkColor[i], cover * shown);
+    }
+    return vec4(0.0);
+  }
+`;
+
+/**
+ * The pointer's lamp, in screen space.
+ */
+const glowFunction = `
+  /** x, y in buffer pixels, z: how much of a pointer there is at all, 0–1. */
+  uniform vec3 uGlow;
+  uniform float uGlowRadius;
+  uniform float uGlowDim;
+  uniform float uGlowLift;
+  uniform float uGlowHalo;
+
+  /**
+   * What this fragment's weight should be multiplied by.
+   *
+   * 1.0 wherever there is no pointer — a device that cannot hover gets the model
+   * it always had, not a permanently dimmed one.
+   */
+  float glowNear(vec2 px) {
+    float near = 1.0 - smoothstep(0.0, uGlowRadius, distance(px, uGlow.xy));
+    // Eased twice: the lamp should have a soft core and no visible rim.
+    return near * near;
+  }
+
+  float glowWeight(vec2 px) {
+    return mix(1.0, mix(uGlowDim, uGlowLift, glowNear(px)), uGlow.z);
+  }
+
+  /** The halo's own, stronger lift — this is where the lamp gets its bloom. */
+  float glowHalo(vec2 px) {
+    return mix(1.0, mix(uGlowDim, uGlowHalo, glowNear(px)), uGlow.z);
+  }
+`;
+
+/**
+ * The stage lines, and the three zones they cut the screen into.
+ */
+const stageFunctions = `
+  uniform float uTideY;
+  uniform float uDeepY;
+  uniform float uLineEdge;
+  uniform float uLineBow;
+
+  /**
+   * How far the line is lifted at this column.
+   *
+   * Half a sine across the viewport, so the line stays where it was at both
+   * edges of the screen and only its middle rises.
+   */
+  float lineBow() {
+    if (uLineBow == 0.0) return 0.0;
+    return uLineBow * sin(3.14159265 * (gl_FragCoord.x / uResolution.x));
+  }
+
+  float lineMask(float lineY) {
+    float y = gl_FragCoord.y / uResolution.y;
+    float at = lineY + lineBow();
+    return 1.0 - smoothstep(at - uLineEdge, at + uLineEdge, y);
+  }
+
+  // x = surface (white), y = tide (the live field), z = deep
+  vec3 stageZones() {
+    float t = lineMask(uTideY);
+    float d = lineMask(uDeepY);
+    return vec3(1.0 - t, clamp(t - d, 0.0, 1.0), d);
+  }
+
+`;
+
+/**
+ * The tide — a fire front creeping across a field, the scene's second stage.
+ */
+const tideFieldFunction = `
+  uniform vec3 uTideBg, uTideA, uTideB, uTideC, uTideD;
+  uniform float uTideTime;
+  uniform vec2 uTidePointer;
+  uniform vec2 uTideVelocity;
+  /** How far down the runway the reader is, and how fast they are travelling. */
+  uniform float uTideScroll;
+  uniform float uTideSurge;
+
+  const int TIDE_OCTAVES = 3;
+  const float TIDE_SCALE = float(0.45);
+  const float TIDE_SPEED = float(0.33);
+  const float TIDE_SPREAD = float(0.07);
+  const float TIDE_RISE = float(0.3);
+  const float TIDE_THRESHOLD = float(0.63);
+  const float TIDE_EMBER = float(0.15);
+  const float TIDE_LICK = float(0.2);
+  const float TIDE_ROUGH = float(0.5);
+  const float TIDE_LACUNARITY = float(1.8);
+  const float TIDE_CONTRAST = float(1.5);
+  const float TIDE_MIDPOINT = float(0.5);
+  const float TIDE_SINK = float(0.42);
+  const float TIDE_GLOW = float(0.3);
+  const float TIDE_VIGNETTE = float(0.5);
+  const float TIDE_POINTER_RADIUS = float(0.9);
+  const float TIDE_POINTER_STRENGTH = float(0.5);
+  const float TIDE_WAKE = float(4);
+  const float TIDE_PARALLAX = float(0.01);
+  const float TIDE_SCROLL_DRIFT = float(0.45);
+  const float TIDE_SCROLL_SURGE = float(0.045);
+
+  float tideFbm(vec2 p) {
+    float v = 0.0, amp = 0.5;
+    for (int i = 0; i < TIDE_OCTAVES; i++) {
+      v += amp * sceneNoise(p);
+      p *= TIDE_LACUNARITY;
+      amp *= TIDE_ROUGH;
+    }
+    return v;
+  }
+
+  vec3 tideRamp(float t) {
+    vec3 c = mix(uTideA, uTideB, smoothstep(0.00, 0.36, t));
+    c = mix(c, uTideC, smoothstep(0.32, 0.70, t));
+    c = mix(c, uTideD, smoothstep(0.66, 1.00, t));
+    return c;
+  }
+
+  vec3 tideColor() {
+    vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
+    float t = uTideTime * TIDE_SPEED;
+
+    vec2 d = uv - uTidePointer;
+    float near = exp(-dot(d, d)
+      / max(1e-4, TIDE_POINTER_RADIUS * TIDE_POINTER_RADIUS));
+
+    // The fuel scrolls; the threshold does not. See the note above.
+    // The clock slides the field sideways; the **scroll** slides it up and
+    // across, so the ground reads as something being travelled over rather than
+    // a loop playing behind the page.
+    vec2 p = (uv - uTidePointer * TIDE_PARALLAX) * TIDE_SCALE
+      + vec2(t * TIDE_SPREAD, 0.0)
+      + vec2(uTideScroll * TIDE_SCROLL_DRIFT * 0.6,
+             -uTideScroll * TIDE_SCROLL_DRIFT);
+    float fuel = tideFbm(p * 1.5) * 0.5 + 0.5;
+
+    // Fire leans toward a draught: the threshold drops where the hand is, and
+    // tilts along the direction it is heading.
+    float thr = TIDE_THRESHOLD
+      - near * TIDE_POINTER_STRENGTH * 0.12
+      - uTideVelocity.x * TIDE_WAKE * 0.05
+      // Travelling fast opens the front up; standing still leaves it alone.
+      - uTideSurge * TIDE_SCROLL_SURGE;
+    float e0 = fuel - thr;
+
+    float charred = smoothstep(0.02, -0.14, e0);
+    float ember = exp(-e0 * e0 / max(1e-5, TIDE_EMBER * TIDE_EMBER));
+    float lick = (tideFbm(vec2(p.x * 2.4, p.y * 1.2 - t * TIDE_RISE)) * 0.5 + 0.5)
+      * ember * TIDE_LICK;
+
+    float f = clamp(0.08 + charred * 0.10 + ember * 0.50 + lick * 0.34, 0.0, 1.0);
+    f = clamp((f - TIDE_MIDPOINT) * TIDE_CONTRAST + 0.5, 0.0, 1.0);
+
+    vec3 col = tideRamp(f);
+    col += uTideD * TIDE_GLOW * pow(f, 4.0);
+    col = mix(uTideBg, col, smoothstep(0.0, max(0.01, TIDE_SINK), f) * 0.9 + 0.1);
+    col *= 1.0 - TIDE_VIGNETTE * dot(uv, uv);
+    return col;
+  }
+
+  /**
+   * Source-over, in **unpremultiplied** space.
+   */
+  void paintOver(inout vec3 dstRgb, inout float dstA, vec3 srcRgb, float srcA) {
+    float a = srcA + dstA * (1.0 - srcA);
+    if (a > 0.0001) {
+      dstRgb = (srcRgb * srcA + dstRgb * dstA * (1.0 - srcA)) / a;
+    }
+    dstA = a;
+  }
+
+  /**
+   * One rule, at a given row. The row arrives already snapped to a fragment
+   * centre (see rowAt), so a thickness of 1 lights one row and nothing else.
+   */
+  float ruleAt(float y) {
+    float d = abs(gl_FragCoord.y - y);
+    return uRuleOn * (1.0 - smoothstep(uRuleHalf - 0.5, uRuleHalf + 0.5, d));
+  }
+
+  const float IMMERSED_RULE_ALPHA = float(0.3);
+
+  /**
+   * The delivery screen's rule: how much of it to lay down, for a given set of
+   * zone weights and row.
+   */
+  float immersedRuleWeight(vec3 zones, float row) {
+    return ruleAt(row) * zones.z * uRuleImmersedFade * IMMERSED_RULE_ALPHA;
+  }
+
+  vec3 stageColor(vec3 zones, float mark) {
+    // The field runs under BOTH lower stages. The third line no longer brings a
+    // colour of its own — what it changes is the model, not the ground — so the
+    // early-out has to cover the pair or the field would blink off at it.
+    float lit = zones.y + zones.z;
+    vec3 field = vec3(0.0);
+    if (lit > 0.001) field = tideColor();
+    // The field keeps the curve — its glow term runs past 1 and relied on the
+    // roll-off. The flat ground and the mark below do not: they are tokens, and
+    // a token has to land as itself.
+    vec3 ground = zones.x * uStageDisplay + lit * neutralToneMap(field);
+    // The mark falls on the ground as well as on the model, weighted by the
+    // white zone — it does not exist below the tide line.
+    return mix(ground, uMarkDisplay, uMarkWash * mark * zones.x);
+  }
+`;
+
+/**
+ * The Khronos PBR Neutral curve, applied **here** rather than at the end of the
+ * chain — which is the only way a design token can survive the pipeline.
+ */
+const toneMapFunction = `
+  uniform float uToneExposure;
+
+  vec3 neutralToneMap(vec3 color) {
+    const float startCompression = 0.8 - 0.04;
+    const float desaturation = 0.15;
+
+    color *= uToneExposure;
+
+    float x = min(color.r, min(color.g, color.b));
+    float offset = x < 0.08 ? x - 6.25 * x * x : 0.04;
+    color -= offset;
+
+    float peak = max(color.r, max(color.g, color.b));
+    if (peak < startCompression) return color;
+
+    float d = 1.0 - startCompression;
+    float newPeak = 1.0 - d * d / (peak + d - startCompression);
+    color *= newPeak / peak;
+
+    float g = 1.0 - 1.0 / (desaturation * (peak - newPeak) + 1.0);
+    return mix(color, vec3(newPeak), g);
+  }
+`;
+
+/**
+ * How much of the model gives way to its stage, and how much of the mesh shows.
+ */
+const revealFunction = `
+  /**
+   * The mark is the **first stage's** alone.
+   */
+  float stageOpen(vec3 zones, float brush) {
+    return zones.x * brush + zones.y + zones.z;
+  }
+`;
+
+/**
+ * The model burning in on arrival.
+ */
+const arrivalFunction = `
+  uniform float uArrive;
+  uniform float uArriveEdge;
+  uniform float uArriveScale;
+  uniform float uArriveTime;
+  uniform vec3 uArriveEmber;
+  uniform vec3 uArriveLick;
+
+  /** How far above this fragment's own threshold the level is. Negative is
+   *  not yet arrived; within the edge of zero is the burning front. */
+  float arriveLevel(vec3 p) {
+    vec3 q = p * uArriveScale;
+    float n = sceneNoise(q.xy + vec2(uArriveTime, 0.0)) * 0.55
+            + sceneNoise(q.yz * 2.1 + vec2(0.0, -uArriveTime * 0.7)) * 0.3
+            + sceneNoise(q.zx * 4.3 + vec2(uArriveTime * 0.5)) * 0.15;
+    // Spread over the full 0–1, and leaning low, so most of the surface has
+    // opened by the half.
+    float threshold = pow(smoothstep(-0.55, 0.55, n), 1.6);
+    return uArrive * (1.0 + uArriveEdge) - threshold;
+  }
+`;
+
+/**
+ * Film grain, per-fragment, on the model only. Multiplicative and
+ * darkening-only.
+ */
+const grainFunction = `
+  uniform float uGrainIntensity;
+  uniform float uGrainSeed;
+
+  float grainHash(vec3 p) {
+    p = fract(p * 0.1031);
+    p += dot(p, p.zyx + 31.32);
+    return fract((p.x + p.y) * p.z);
+  }
+
+  float grainFactor() {
+    float noise = grainHash(vec3(gl_FragCoord.xy, uGrainSeed));
+    return 1.0 - noise * uGrainIntensity;
+  }
+`;
+
+/** A triangular dither. Not decoration: a field this smooth bands visibly on an
+ *  8-bit display without it. */
+const ditherFunction = `
+  float sceneDither(vec2 fc) {
+    float a = fract(sin(dot(fc, vec2(12.9898, 78.233))) * 43758.5453);
+    float b = fract(sin(dot(fc + 17.0, vec2(12.9898, 78.233))) * 43758.5453);
+    return (a + b - 1.0) / 255.0;
+  }
+`;
+
+/**
+ * The mesh's glow, in object space so the bright patches belong to the model and
+ * travel with it as it turns.
+ */
+const wireGlowFunction = `
+  uniform float uWireGlowScale;
+  uniform float uWireGlowFloor;
+  uniform float uWireGlowRange;
+
+  float wireGlow(vec3 p) {
+    float n = sceneNoise(p.xy * uWireGlowScale) * 0.6
+            + sceneNoise(p.zy * uWireGlowScale * 1.3) * 0.4;
+    return uWireGlowFloor + uWireGlowRange * (0.5 + 0.5 * n);
+  }
+`;
+
+/** One uniforms object, shared by reference across the three materials. */
+const createSceneUniforms = () => {
+  const { arrival, brush, chrome, grain, lighting, particles, stages, text, wireframe } = sceneConfig;
+  return {
+    uBrush: { value: Array.from({ length: brush.points }, () => new THREE.Vector4(0, 0, 0, 0)) },
+    uMarkThreshold: { value: brush.threshold },
+    uMarkWobble: { value: brush.wobble },
+    uMarkScale: { value: brush.noiseScale },
+    uMarkTime: { value: 0 },
+    uMarkTailFade: { value: brush.tailFade },
+    uMarkWash: { value: brush.wash },
+    uRuleDisplay: { value: new THREE.Vector3(0, 0, 0) },
+    uRuleY: { value: -1 },
+    uRuleHalf: { value: 0.5 },
+    uRuleOn: { value: 0 },
+    uRuleImmersedY: { value: -1 },
+    uRuleImmersedDisplay: { value: new THREE.Vector3(1, 1, 1) },
+    uRuleImmersedFade: { value: 0 },
+    uInkTex: { value: null },
+    uInkBoxCount: { value: 0 },
+    uInkScreen: { value: Array.from({ length: INK_BOXES }, () => new THREE.Vector4()) },
+    uInkAtlas: { value: Array.from({ length: INK_BOXES }, () => new THREE.Vector4()) },
+    uInkColor: { value: Array.from({ length: INK_BOXES }, () => new THREE.Vector3()) },
+    uInkRange: { value: Array.from({ length: INK_BOXES }, () => new THREE.Vector2()) },
+    uInkUnit: { value: Array.from({ length: INK_UNITS }, () => new THREE.Vector2(0, 1)) },
+    uInkShift: { value: new THREE.Vector2() },
+    uToneExposure: { value: lighting.toneMappingExposure },
+    uMarkDisplay: { value: new THREE.Vector3(1, 1, 1) },
+    uFadeStartY: { value: 0 },
+    uFadeEndY: { value: 0 },
+    uFadeMeshStartY: { value: 0 },
+    uFadeMeshEndY: { value: 0 },
+    uStageDisplay: { value: new THREE.Vector3(1, 1, 1) },
+    uTideBg: { value: new THREE.Vector3(0, 0, 0) },
+    uTideA: { value: new THREE.Vector3(0, 0, 0) },
+    uTideB: { value: new THREE.Vector3(1, 1, 1) },
+    uTideC: { value: new THREE.Vector3(0, 0, 1) },
+    uTideD: { value: new THREE.Vector3(1, 1, 1) },
+    uTideTime: { value: 0 },
+    uTidePointer: { value: new THREE.Vector2(0, 0) },
+    uTideVelocity: { value: new THREE.Vector2(0, 0) },
+    uTideScroll: { value: 0 },
+    uTideSurge: { value: 0 },
+    uGrainIntensity: { value: grain.intensity },
+    uGrainSeed: { value: 0 },
+    uGlow: { value: new THREE.Vector3(0, 0, 0) },
+    uGlowRadius: { value: 1 },
+    uGlowDim: { value: sceneConfig.pointerGlow.dim },
+    uGlowLift: { value: sceneConfig.pointerGlow.lift },
+    uGlowHalo: { value: sceneConfig.pointerGlow.haloLift },
+    uWireOpacity: { value: wireframe.opacity },
+    uWireImmersedOpacity: { value: wireframe.immersedOpacity },
+    uWireDisplay: { value: new THREE.Vector3(0, 0, 0) },
+    uWireImmersedDisplay: { value: new THREE.Vector3(1, 1, 1) },
+    uWireGlowScale: { value: wireframe.glowNoiseScale },
+    uWireGlowFloor: { value: wireframe.glowFloor },
+    uWireGlowRange: { value: wireframe.glowRange },
+    uMorph: { value: 0 },
+    uMorphStagger: { value: text.morphStagger },
+    uWordFill: { value: 0 },
+    uWordFillFrom: { value: -1 },
+    uWordFillTo: { value: 1 },
+    uWordFillEdge: { value: text.fillEdge },
+    uBustFade: { value: 1 },
+    uLatticeFade: { value: 0 },
+    uLatticeSparkFade: { value: 0 },
+    uSparkLatticeScale: { value: particles.latticeScale },
+    uSparkLatticeShrink: { value: particles.latticeShrink },
+    uSparkDisplay: { value: new THREE.Vector3(1, 1, 1) },
+    uSparkOpacity: { value: particles.opacity },
+    uSparkFalloff: { value: particles.falloff },
+    uSparkGain: { value: particles.gain },
+    uSparkGlowInfluence: { value: particles.glowInfluence },
+    uTideY: { value: stages.lineFrom },
+    uDeepY: { value: stages.lineFrom },
+    uLineEdge: { value: 0.001 },
+    uLineBow: { value: 0 },
+    uResolution: { value: new THREE.Vector2(1, 1) },
+    uChromeMetalness: { value: chrome.metalness },
+    uChromeRoughness: { value: chrome.roughness },
+    uChromeTint: { value: chrome.tint },
+    uChromeFalloff: { value: chrome.falloff },
+    uChromeSheen: { value: new THREE.Color(1, 1, 1) },
+    uChromeDeep: { value: new THREE.Color(0, 0, 1) },
+    uArrive: { value: 1 },
+    uArriveEdge: { value: arrival.edge },
+    uArriveScale: { value: 1 },
+    uArriveTime: { value: 0 },
+    uArriveEmber: { value: new THREE.Vector3(0, 0, 1) },
+    uArriveLick: { value: new THREE.Vector3(1, 1, 1) },
+  };
+};
+
+const brushDefines = () => ({
+  BRUSH_POINTS: String(sceneConfig.brush.points),
+});
+
+/** Keeps all of three's PBR lighting and adds the stages on top of it. */
+const patchModelMaterial = (material, uniforms) => {
+  material.defines = { ...material.defines, ...brushDefines() };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", `#include <common>\n${varyingDeclaration}`)
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>\n${vertexAssignment}`,
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${resolutionUniform}
+         ${varyingDeclaration}
+         ${noiseFunctions}
+         ${brushMaskFunction}
+         ${bottomFadeFunction}
+         ${toneMapFunction}
+         ${inkFunction}
+         uniform vec3 uRuleDisplay;
+         uniform float uRuleY;
+         uniform float uRuleHalf;
+         uniform float uRuleOn;
+         uniform float uRuleImmersedY;
+         uniform vec3 uRuleImmersedDisplay;
+         uniform float uRuleImmersedFade;
+         ${stageFunctions}
+         ${glowFunction}
+         uniform vec3 uStageDisplay;
+         uniform vec3 uMarkDisplay;
+         uniform float uMarkWash;
+         ${tideFieldFunction}
+         ${revealFunction}
+         ${arrivalFunction}
+         ${grainFunction}
+         uniform float uChromeMetalness;
+         uniform float uChromeRoughness;
+         uniform float uChromeTint;
+         uniform float uChromeFalloff;
+         uniform vec3 uChromeSheen;
+         uniform vec3 uChromeDeep;`,
+      )
+      .replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+         // First, before any lighting is paid for: a fragment the arrival has
+         // not reached yet is not drawn at all, and writes no depth — so the
+         // stage behind it, name and rule included, shows through the gap.
+         float sceneArrive = arriveLevel(vScenePosition);
+         if (sceneArrive < 0.0) discard;
+         vec3 sceneZones = stageZones();
+         float sceneBrush = brushMask(gl_FragCoord.xy);`,
+      )
+      // Stage 3: liquid chrome. Injected here because normal and vViewPosition
+      // are final by now and lights_physical_fragment has not run yet.
+      .replace(
+        "#include <lights_physical_fragment>",
+        `float sceneFresnel =
+           1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0);
+         vec3 sceneChrome = mix(
+           uChromeDeep, uChromeSheen, pow(sceneFresnel, uChromeFalloff)
+         );
+         diffuseColor.rgb =
+           mix(diffuseColor.rgb, sceneChrome, sceneZones.z * uChromeTint);
+         roughnessFactor = mix(roughnessFactor, uChromeRoughness, sceneZones.z);
+         metalnessFactor = mix(metalnessFactor, uChromeMetalness, sceneZones.z);
+         #include <lights_physical_fragment>`,
+      )
+      // Last chunk in main(): everything below runs in display space.
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+         gl_FragColor.rgb *= grainFactor();
+         // The lit colour, and only the lit colour. Everything mixed in below
+         // is a design token and must reach the screen unchanged.
+         gl_FragColor.rgb = neutralToneMap(gl_FragColor.rgb);
+
+         vec3 sceneStage = stageColor(sceneZones, sceneBrush);
+         // **The painted heading shows through the subject below the tide line.**
+         // First stage excluded: there the model is a lit surface and the name
+         // belongs behind it.
+         vec4 sceneInk = stageInk();
+         sceneStage = mix(
+           sceneStage,
+           sceneInk.rgb,
+           sceneInk.a * (sceneZones.y + sceneZones.z)
+         );
+         // And the rule with it, for the same reason.
+         sceneStage = mix(
+           sceneStage,
+           uRuleImmersedDisplay,
+           immersedRuleWeight(sceneZones, uRuleImmersedY)
+         );
+
+         // Two reasons to hand a fragment over to its stage, and the stronger
+         // wins: the bottom fog, or the stage opening the model up.
+         float sceneToStage = max(
+           1.0 - bottomFade(vScenePosition),
+           stageOpen(sceneZones, sceneBrush)
+         );
+         // Stays a colour, and the model stays **opaque**.
+         gl_FragColor.rgb = mix(gl_FragColor.rgb, sceneStage, sceneToStage);
+
+         // The burning front, over everything: the ember where the surface
+         // has just opened, the lick at the very edge.
+         float sceneEmber = 1.0 - smoothstep(0.0, uArriveEdge, sceneArrive);
+         vec3 sceneEmberColor = mix(
+           uArriveEmber, uArriveLick, pow(sceneEmber, 3.0)
+         );
+         gl_FragColor.rgb = mix(gl_FragColor.rgb, sceneEmberColor, sceneEmber);`,
+      );
+  };
+  material.needsUpdate = true;
+};
+
+/**
+ * The model's shadow, taught the same arrival.
+ */
+const patchModelDepthMaterial = (uniforms) => {
+  const material = new THREE.MeshDepthMaterial({
+    depthPacking: THREE.RGBADepthPacking,
+  });
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", `#include <common>\n${varyingDeclaration}`)
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>\n${vertexAssignment}`,
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${varyingDeclaration}
+         ${noiseFunctions}
+         ${arrivalFunction}`,
+      )
+      .replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+         if (arriveLevel(vScenePosition) < 0.0) discard;`,
+      );
+  };
+  return material;
+};
+
+/**
+ * Patches the wireframe overlay's material in place.
+ *
+ * A stock unlit material rather than a raw ShaderMaterial on purpose: with
+ * shadows enabled a hand-written program makes the renderer bind shadow
+ * samplers it never declared, and every draw in the frame is dropped.
+ */
+const patchWireframeMaterial = (material, uniforms, { halo = false, lattice = false } = {}) => {
+  material.defines = {
+    ...material.defines,
+    ...brushDefines(),
+    ...(halo ? { WIRE_HALO: "" } : {}),
+    // Which side of the hand-over this material is on. A define, not a
+    // uniform: it never changes for a given material.
+    ...(lattice ? { MORPH_FROM: "" } : {}),
+  };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${varyingDeclaration}
+         ${morphFunctions}`,
+      )
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+         ${vertexAssignment}
+         // The varying stays on the ORIGINAL position on purpose: the brush,
+         // the bottom fade and the uneven glow are properties of the point on
+         // the bust, and they have to travel with it rather than be resampled
+         // wherever it has got to.
+         transformed = morphed(position);`,
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${resolutionUniform}
+         ${varyingDeclaration}
+         ${noiseFunctions}
+         ${brushMaskFunction}
+         ${bottomFadeFunction}
+         ${toneMapFunction}
+         uniform vec3 uRuleDisplay;
+         uniform float uRuleY;
+         uniform float uRuleHalf;
+         uniform float uRuleOn;
+         uniform float uRuleImmersedY;
+         uniform vec3 uRuleImmersedDisplay;
+         uniform float uRuleImmersedFade;
+         ${stageFunctions}
+         ${glowFunction}
+         ${revealFunction}
+         ${wireGlowFunction}
+         uniform float uWireOpacity;
+         uniform float uWireImmersedOpacity;
+         ${morphFadeFunctions}
+         ${wordFillFunction}
+         uniform vec3 uWireDisplay;
+         uniform vec3 uWireImmersedDisplay;`,
+      )
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+         vec3 wireZones = stageZones();
+         float wirePast = 1.0 - wireZones.x;
+         // One immersed weight, not two blended by the stage mask.
+         float wireAlpha = stageOpen(wireZones, brushMask(gl_FragCoord.xy))
+           * mix(uWireOpacity, uWireImmersedOpacity, wirePast)
+           // Only past the first line: on white the model is a lit surface and
+           // the mark is what the pointer does there.
+           * mix(1.0, glowWeight(gl_FragCoord.xy), wirePast)
+           // The fade dissolves the bottom of a *bust*, and only the word is
+           // allowed out of it.
+           #ifdef MORPH_FROM
+             * mix(meshBottomFade(vScenePosition), 1.0, uMorph)
+           #else
+             * meshBottomFade(vScenePosition)
+           #endif
+           * morphFade()
+           #ifdef MORPH_FROM
+             // Below the chrome level there is a surface now; the scaffold that
+             // described it has nothing left to describe.
+             * (1.0 - wordFill(vScenePosition))
+           #endif
+           * wireGlow(vScenePosition);
+         #ifdef WIRE_HALO
+           // The halo is the glow, so it lives only where the mesh carries the
+           // subject — on white it would just fog a clean line.
+           wireAlpha *= 0.16 * wirePast
+             // The lamp's glow, aimed: the crisp line above already took the
+             // ordinary lift, and this is the spill around it.
+             * mix(1.0, glowHalo(gl_FragCoord.xy) / max(0.0001, glowWeight(gl_FragCoord.xy)), wirePast);
+         #endif
+         if (wireAlpha <= 0.002) discard;
+         gl_FragColor.rgb = mix(uWireDisplay, uWireImmersedDisplay, wirePast);
+         #ifdef WIRE_HALO
+           // Screen blending never reads alpha, so every mask this pass
+           // computes has to be carried by the **colour** instead.
+           gl_FragColor.rgb *= wireAlpha;
+           gl_FragColor.a = 1.0;
+         #else
+           gl_FragColor.a = wireAlpha;
+         #endif`,
+      );
+  };
+  material.needsUpdate = true;
+};
+
+/**
+ * Patches the junction sparks' material in place.
+ */
+const patchParticleMaterial = (material, uniforms, { lattice = false } = {}) => {
+  material.defines = {
+    ...material.defines,
+    ...brushDefines(),
+    ...(lattice ? { MORPH_FROM: "" } : {}),
+  };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${resolutionUniform}
+         ${varyingDeclaration}
+         ${sparkVaryings}
+         ${noiseFunctions}
+         ${brushMaskFunction}
+         ${bottomFadeFunction}
+         ${wireGlowFunction}
+         ${morphFunctions}
+         uniform float uSparkGlowInfluence;
+         uniform float uSparkOpacity;
+         uniform float uSparkLatticeScale;
+         uniform float uSparkLatticeShrink;
+
+         // The letters are meant to read as even, so their sparks skip the
+         // uneven surface glow the bust's carry.
+         #ifdef MORPH_FROM
+           float sparkShape() { return 1.0; }
+           float sparkWeight() { return uSparkLatticeScale; }
+           float sparkSize() { return uSparkLatticeShrink; }
+         #else
+           float sparkShape() {
+             return mix(1.0, wireGlow(position), uSparkGlowInfluence);
+           }
+           float sparkWeight() { return 1.0; }
+           float sparkSize() { return 1.0; }
+         #endif`,
+      )
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+         ${vertexAssignment}
+         // Everything here is a function of the sprite's single object-space
+         // point, so it has exactly one value across the whole quad.
+         transformed = morphed(position);
+         #ifdef MORPH_FROM
+           float sparkFade = mix(meshBottomFade(position), 1.0, uMorph);
+         #else
+           // The bust keeps its bottom fade to the end — see the wireframe.
+           float sparkFade = meshBottomFade(position);
+         #endif
+         vSparkBody = sparkFade
+           * sparkShape()
+           * sparkWeight()
+           * morphSparkFade()
+           * uSparkOpacity;`,
+      )
+      // The mark is a screen-space field, so the sprite can only ask where it
+      // has landed once it has been projected.
+      .replace(
+        "#include <project_vertex>",
+        `#include <project_vertex>
+         vSparkBrush = brushMask(
+           (gl_Position.xy / gl_Position.w * 0.5 + 0.5) * uResolution
+         );`,
+      )
+      .replace("gl_PointSize = size;", "gl_PointSize = size * sparkSize();");
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${resolutionUniform}
+         ${varyingDeclaration}
+         ${sparkVaryings}
+         ${toneMapFunction}
+         uniform vec3 uRuleDisplay;
+         uniform float uRuleY;
+         uniform float uRuleHalf;
+         uniform float uRuleOn;
+         uniform float uRuleImmersedY;
+         uniform vec3 uRuleImmersedDisplay;
+         uniform float uRuleImmersedFade;
+         ${stageFunctions}
+         ${glowFunction}
+         ${revealFunction}
+         ${wordFillFunction}
+         uniform vec3 uSparkDisplay;
+         uniform float uSparkFalloff;
+         uniform float uSparkGain;`,
+      )
+      .replace(
+        "#include <premultiplied_alpha_fragment>",
+        `#include <premultiplied_alpha_fragment>
+         // Cheapest test first: a quarter of every sprite quad lies outside the
+         // disc, and additive sprites are pure overdraw.
+         vec2 sparkCoord = gl_PointCoord - 0.5;
+         float sparkR2 = dot(sparkCoord, sparkCoord);
+         if (sparkR2 > 0.25) discard;
+
+         // The stage mask stays per-fragment.
+         vec3 sparkZones = stageZones();
+         // Both immersed stages, not just the tide.
+         float sparkLit = sparkZones.y + sparkZones.z;
+         float sparkAlpha =
+           sparkLit
+           * stageOpen(sparkZones, vSparkBrush)
+           * vSparkBody
+           * mix(1.0, glowWeight(gl_FragCoord.xy), 1.0 - sparkZones.x);
+         #ifdef MORPH_FROM
+           sparkAlpha *= 1.0 - wordFill(vScenePosition);
+         #endif
+         if (sparkAlpha <= 0.002) discard;
+
+         float sparkFall = pow(1.0 - sqrt(sparkR2) * 2.0, uSparkFalloff);
+         // Additive: the colour *is* the contribution, so it carries the alpha.
+         gl_FragColor =
+           vec4(uSparkDisplay * uSparkGain * sparkFall * sparkAlpha, 1.0);`,
+      );
+  };
+  material.needsUpdate = true;
+};
+
+/**
+ * Patches the word's solid in place — the chrome that rises through it.
+ */
+const patchWordChromeMaterial = (material, uniforms) => {
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+${varyingDeclaration}`,
+      )
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+${vertexAssignment}`,
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${varyingDeclaration}
+         ${noiseFunctions}
+         ${wordFillFunction}
+         ${toneMapFunction}
+         uniform float uChromeMetalness;
+         uniform float uChromeRoughness;
+         uniform float uChromeFalloff;
+         uniform vec3 uChromeSheen;
+         uniform vec3 uChromeDeep;`,
+      )
+      .replace(
+        "#include <lights_physical_fragment>",
+        `if (wordFill(vScenePosition) < 0.5) discard;
+         float wordFresnel =
+           1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0);
+         // Stays inside [0,1]: this is a reflectance, and the brightness comes
+         // from envMapIntensity on the material instead.
+         diffuseColor.rgb = mix(
+           uChromeDeep, uChromeSheen, pow(wordFresnel, uChromeFalloff)
+         );
+         roughnessFactor = uChromeRoughness;
+         metalnessFactor = uChromeMetalness;
+         #include <lights_physical_fragment>`,
+      )
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+         // Lit chrome, so it takes the curve; the sheen added below is a token.
+         gl_FragColor.rgb = neutralToneMap(gl_FragColor.rgb);
+         // The waterline. A hair of extra light exactly where the level is, so
+         // the surface reads as ending rather than as cut off.
+         float wordLevel = wordFill(vScenePosition);
+         gl_FragColor.rgb += uChromeSheen
+           * 0.55
+           * (1.0 - abs(wordLevel * 2.0 - 1.0));`,
+      );
+  };
+  material.needsUpdate = true;
+};
+
+/**
+ * Patches the background quad's material in place.
+ */
+const patchBackgroundMaterial = (material, uniforms) => {
+  // The ground reads the mark now, so it needs the ring's size like every
+  // other material that does.
+  material.defines = { ...material.defines, ...brushDefines() };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+
+    // Far plane, not near: the quad is depth-tested and drawn *after* the
+    // model, so the depth the model already wrote rejects it.
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <project_vertex>",
+      `#include <project_vertex>
+       gl_Position = vec4(position.xy, 1.0, 1.0);`,
+    );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+         ${resolutionUniform}
+         ${varyingDeclaration}
+         ${noiseFunctions}
+         ${brushMaskFunction}
+         ${toneMapFunction}
+         uniform vec3 uRuleDisplay;
+         uniform float uRuleY;
+         uniform float uRuleHalf;
+         uniform float uRuleOn;
+         uniform float uRuleImmersedY;
+         uniform vec3 uRuleImmersedDisplay;
+         uniform float uRuleImmersedFade;
+         ${stageFunctions}
+         ${glowFunction}
+         uniform vec3 uStageDisplay;
+         uniform vec3 uMarkDisplay;
+         uniform float uMarkWash;
+         ${inkFunction}
+         ${tideFieldFunction}
+         ${ditherFunction}`,
+      )
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+         vec3 bgZones = stageZones();
+         float bgMark = brushMask(gl_FragCoord.xy);
+         vec3 bgColor = stageColor(bgZones, bgMark);
+         bgColor += sceneDither(gl_FragCoord.xy) * 1.2;
+         // Opaque under the tide and past the third line. On the white stage
+         // the ground is the page's, not the canvas's.
+         float bgAlpha = clamp(
+           bgZones.y + bgZones.z + uMarkWash * bgMark * bgZones.x,
+           0.0,
+           1.0
+         );
+
+         // The first screen's UI, painted **here** and nowhere else.
+         paintOver(bgColor, bgAlpha, uRuleDisplay, ruleAt(uRuleY) * bgZones.x);
+         // The **delivery** screen has a rule of its own.
+         paintOver(
+           bgColor,
+           bgAlpha,
+           uRuleImmersedDisplay,
+           immersedRuleWeight(bgZones, uRuleImmersedY)
+         );
+         // No stage gate: each piece of type is faded by the window of the
+         // screen it belongs to.
+         vec4 ink = stageInk();
+         paintOver(bgColor, bgAlpha, ink.rgb, ink.a);
+         // **Premultiplied**, and it has to be.
+         gl_FragColor = vec4(clamp(bgColor, 0.0, 1.0) * bgAlpha, bgAlpha);`,
+      );
+  };
+  material.needsUpdate = true;
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Geometry: the weld, the word, the brush
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const buildCoarseWireframe = (source, { cellSize, surfaceOffset }) => {
+  const positions = source.getAttribute("position");
+  const normals = source.getAttribute("normal");
+  const index = source.getIndex();
+  if (!positions || !index) return null;
+
+  const cells = new Map();
+  const cellOf = new Int32Array(positions.count).fill(-1);
+  const inverse = 1 / cellSize;
+  for (let i = 0; i < positions.count; i++) {
+    const key = `${Math.round(positions.getX(i) * inverse)},${Math.round(positions.getY(i) * inverse)},${Math.round(positions.getZ(i) * inverse)}`;
+    let cell = cells.get(key);
+    if (!cell) { cell = { index: cells.size, position: new THREE.Vector3(), normal: new THREE.Vector3(), count: 0 }; cells.set(key, cell); }
+    cell.position.x += positions.getX(i); cell.position.y += positions.getY(i); cell.position.z += positions.getZ(i);
+    if (normals) { cell.normal.x += normals.getX(i); cell.normal.y += normals.getY(i); cell.normal.z += normals.getZ(i); }
+    cell.count++; cellOf[i] = cell.index;
+  }
+  // Averaged centroid, lifted along the averaged normal so lines float clear of the surface.
+  const vertices = new Float32Array(cells.size * 3);
+  for (const cell of cells.values()) {
+    cell.position.divideScalar(cell.count);
+    if (cell.normal.lengthSq() > 0) cell.position.addScaledVector(cell.normal.normalize(), surfaceOffset);
+    vertices.set([cell.position.x, cell.position.y, cell.position.z], cell.index * 3);
+  }
+  // An edge survives only where a triangle crosses two cells.
+  const edges = new Set(), junctions = new Set(), cellCount = cells.size;
+  for (let i = 0; i < index.count; i += 3) {
+    const a = cellOf[index.getX(i)], b = cellOf[index.getX(i + 1)], c = cellOf[index.getX(i + 2)];
+    for (const [from, to] of [[a, b], [b, c], [c, a]]) {
+      if (from === to) continue;
+      const low = Math.min(from, to), high = Math.max(from, to);
+      edges.add(low * cellCount + high); junctions.add(low); junctions.add(high);
+    }
+  }
+  const junctionRank = new Map();
+  for (const cell of junctions) junctionRank.set(cell, junctionRank.size);
+  const lines = new Float32Array(edges.size * 6);
+  const lineJunction = new Uint32Array(edges.size * 2);
+  let cursor = 0, lineVertex = 0;
+  for (const edge of edges) {
+    const low = Math.floor(edge / cellCount), high = edge % cellCount;
+    lines.set(vertices.subarray(low * 3, low * 3 + 3), cursor);
+    lines.set(vertices.subarray(high * 3, high * 3 + 3), cursor + 3);
+    lineJunction[lineVertex] = junctionRank.get(low) ?? 0;
+    lineJunction[lineVertex + 1] = junctionRank.get(high) ?? 0;
+    cursor += 6; lineVertex += 2;
+  }
+  const lineGeometry = new THREE.BufferGeometry();
+  lineGeometry.setAttribute("position", new THREE.BufferAttribute(lines, 3));
+  const junctionPositions = new Float32Array(junctions.size * 3);
+  for (const [cell, rank] of junctionRank) junctionPositions.set(vertices.subarray(cell * 3, cell * 3 + 3), rank * 3);
+  const pointGeometry = new THREE.BufferGeometry();
+  pointGeometry.setAttribute("position", new THREE.BufferAttribute(junctionPositions, 3));
+  return { lines: lineGeometry, points: pointGeometry, junctions: junctionPositions, lineJunction };
+};
+
+const loadWordModel = async (url, { dracoDecoderPath, width, maxHeight }) => {
+  const draco = new DRACOLoader().setDecoderPath(dracoDecoderPath);
+  const loader = new GLTFLoader().setDRACOLoader(draco);
+  try {
+    const gltf = await loader.loadAsync(url);
+    gltf.scene.updateMatrixWorld(true);
+    const parts = [], pivots = [];
+    const KEEP = new Set(["position", "normal"]);
+    gltf.scene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const geometry = object.geometry.clone();
+      for (const name of Object.keys(geometry.attributes)) if (!KEEP.has(name)) geometry.deleteAttribute(name);
+      if (!geometry.getAttribute("normal")) geometry.computeVertexNormals();
+      if (!geometry.getIndex()) {
+        const count = geometry.getAttribute("position").count;
+        const index = new Uint32Array(count); for (let i = 0; i < count; i++) index[i] = i;
+        geometry.setIndex(new THREE.BufferAttribute(index, 1));
+      }
+      pivots.push(new THREE.Vector3().setFromMatrixPosition(object.matrixWorld)); // the artist's pivot
+      geometry.applyMatrix4(object.matrixWorld);
+      parts.push(geometry);
+    });
+    if (parts.length === 0) return null;
+    const whole = new THREE.Box3();
+    for (const part of parts) { part.computeBoundingBox(); if (part.boundingBox) whole.union(part.boundingBox); }
+    if (whole.isEmpty()) return null;
+    const size = whole.getSize(new THREE.Vector3()), centre = whole.getCenter(new THREE.Vector3());
+    const scale = Math.min(width / Math.max(1e-6, size.x), maxHeight / Math.max(1e-6, size.y));
+    const fitted = new THREE.Box3(), boxes = [];
+    parts.forEach((part, i) => {
+      part.translate(-centre.x, -centre.y, -centre.z); part.scale(scale, scale, scale);
+      pivots[i].sub(centre).multiplyScalar(scale);
+      part.computeBoundingBox(); const box = part.boundingBox ?? new THREE.Box3(); boxes.push(box); fitted.union(box);
+    });
+    // The accent is the part standing entirely above the others — the mark over the `i`.
+    let accentIndex = -1;
+    if (boxes.length > 1) {
+      let best = -Infinity;
+      boxes.forEach((box, i) => {
+        const clear = boxes.every((other, j) => j === i || box.min.y >= other.max.y);
+        if (clear && box.min.y > best) { best = box.min.y; accentIndex = i; }
+      });
+    }
+    return {
+      parts: parts.map((geometry, i) => ({ geometry, accent: i === accentIndex,
+        pivot: boxes[i].containsPoint(pivots[i]) ? pivots[i] : boxes[i].getCenter(new THREE.Vector3()) })),
+      minY: fitted.min.y, maxY: fitted.max.y,
+    };
+  } catch (error) { console.error(error); return null; }   // a missing word costs the ending, not the hero
+  finally { draco.dispose(); }
+};
+
+/** Where each of the word's junctions starts from — a junction on the bust. */
+const sourceFromJunctions = (nodes, junctions) => {
+  const nodeCount = nodes.length / 3, junctionCount = junctions.length / 3;
+  const sources = new Float32Array(nodeCount * 3);
+  if (junctionCount === 0) return sources;
+  const rank = (source, count, axis) => Array.from({ length: count }, (_, i) => i).sort((a, b) => source[a * 3 + axis] - source[b * 3 + axis]);
+  const nodesByX = rank(nodes, nodeCount, 0), junctionsByX = rank(junctions, junctionCount, 0);
+  const columns = Math.max(1, Math.round(Math.sqrt(nodeCount)));
+  const perNodeColumn = Math.ceil(nodeCount / columns), perJunctionColumn = junctionCount / columns;
+  for (let column = 0; column < columns; column++) {
+    const nodeSlice = nodesByX.slice(column * perNodeColumn, (column + 1) * perNodeColumn).sort((a, b) => nodes[a * 3 + 1] - nodes[b * 3 + 1]);
+    if (nodeSlice.length === 0) continue;
+    const junctionSlice = junctionsByX.slice(Math.floor(column * perJunctionColumn), Math.floor((column + 1) * perJunctionColumn)).sort((a, b) => junctions[a * 3 + 1] - junctions[b * 3 + 1]);
+    if (junctionSlice.length === 0) continue;
+    for (let i = 0; i < nodeSlice.length; i++) {
+      const node = nodeSlice[i];
+      const junction = junctionSlice[Math.min(junctionSlice.length - 1, Math.floor((i / nodeSlice.length) * junctionSlice.length))];
+      sources[node * 3] = junctions[junction * 3]; sources[node * 3 + 1] = junctions[junction * 3 + 1]; sources[node * 3 + 2] = junctions[junction * 3 + 2];
+    }
+  }
+  return sources;
+};
+
+class Brush {
+  constructor(size) {
+    this.points = Array.from({ length: size }, () => new THREE.Vector3());
+    this.life = new Array(size).fill(0); this.ends = new Array(size).fill(true);
+    this.cursor = 0; this.live = false; this.lastPoint = null; this.scratch = new THREE.Vector3(); this.minStep = 0;
+  }
+  configure(modelRadius) { this.minStep = modelRadius * sceneConfig.brush.minStepRatio; }
+  get head() { return this.live ? (this.cursor + 1) % this.points.length : this.cursor; }
+  get active() { return this.life.some((l) => l > 0); }
+  add(objectPoint) {
+    if (!this.lastPoint) { this.lastPoint = objectPoint.clone(); this.write(objectPoint); this.commit(); return; }
+    const distance = this.lastPoint.distanceTo(objectPoint);
+    if (distance < this.minStep) { this.write(objectPoint); this.live = true; return; }   // the head follows in place
+    const steps = Math.min(Math.ceil(distance / this.minStep), this.points.length);
+    for (let step = 1; step <= steps; step++) { this.scratch.lerpVectors(this.lastPoint, objectPoint, step / steps); this.write(this.scratch); this.commit(); }
+    this.live = false; this.lastPoint.copy(objectPoint);
+  }
+  break() {                       // the pointer left: the stroke comes apart where it stands
+    this.lastPoint = null;
+    if (this.live) { this.live = false; this.commit(); }
+    const last = (this.cursor - 1 + this.ends.length) % this.ends.length; this.ends[last] = true;
+  }
+  update(delta) {
+    const step = delta / sceneConfig.brush.lifetimeSeconds;
+    for (let i = 0; i < this.life.length; i++) if (this.life[i] > 0) this.life[i] = Math.max(0, this.life[i] - step);
+  }
+  write(point) {
+    const previous = (this.cursor - 1 + this.points.length) % this.points.length;
+    if (this.life[previous] > 0) this.ends[previous] = false;
+    this.points[this.cursor].copy(point); this.life[this.cursor] = 1; this.ends[this.cursor] = true;
+  }
+  commit() { this.cursor = (this.cursor + 1) % this.points.length; }
+}
+
+const applyScreenBlending = (material) => {
+  material.blending = THREE.CustomBlending;
+  material.blendEquation = THREE.AddEquation;
+  material.blendSrc = THREE.OneMinusDstColorFactor;
+  material.blendDst = THREE.OneFactor;
+};
+
+const linear = (hex) => { const c = new THREE.Color(hex); return new THREE.Vector3(c.r, c.g, c.b); };
+const materialsOf = (mesh) => (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).filter(Boolean);
+const MAP_KEYS = ["map", "normalMap", "roughnessMap", "metalnessMap", "aoMap", "emissiveMap"];
+
+const capTexture = async (texture, cap) => {
+  const image = texture.image;
+  if (!image || !image.width || !image.height) return false;
+  const longest = Math.max(image.width, image.height);
+  if (longest <= cap) return false;
+  const scale = cap / longest;
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round(image.height * scale));
+  let next;
+  try {
+    // Not premultiplied: the scan's maps carry an alpha channel, and a 2D canvas
+    // multiplies it into the colour — the albedo came out in dark patches.
+    next = await createImageBitmap(image, { resizeWidth: width, resizeHeight: height, resizeQuality: "high", premultiplyAlpha: "none", colorSpaceConversion: "none" });
+  } catch {
+    next = document.createElement("canvas");
+    next.width = width; next.height = height;
+    next.getContext("2d").drawImage(image, 0, 0, width, height);
+  }
+  if (typeof image.close === "function") image.close();
+  texture.image = next;
+  texture.needsUpdate = true;
+  return true;
+};
+
+/** A piece of type's box in the stage's layout space, transforms included. */
+const resolveLength = (value, size) => (value.endsWith("%") ? (parseFloat(value) / 100) * size : parseFloat(value) || 0);
+const layoutOffset = (element, stage) => {
+  let x = 0, y = 0, node = element;
+  while (node && node !== stage) {
+    x += node.offsetLeft; y += node.offsetTop;
+    const style = getComputedStyle(node);
+    if (style.transform && style.transform !== "none") { const m = new DOMMatrixReadOnly(style.transform); x += m.e; y += m.f; }
+    if (style.translate && style.translate !== "none") {
+      const [tx = "0", ty = "0"] = style.translate.split(" ");
+      x += resolveLength(tx, node.offsetWidth); y += resolveLength(ty, node.offsetHeight);
+    }
+    node = node.offsetParent;
+  }
+  return { left: x, top: y };
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The WebGL scene
+   ═══════════════════════════════════════════════════════════════════════ */
+
+class ModelScene {
+  constructor({ stage, box, canvas, runway }) {
+    this.stage = stage; this.box = box; this.canvas = canvas; this.runway = runway;
+    this.tier = TIER; this.lite = LITE;
+    const dpr = devicePixelRatio || 1;
+    this.pixelRatio = this.tier === "mobile" ? Math.min(dpr, 1) : clamp(dpr, 0.75, 1.25);
+    this.frameBudget = { mobile: 1000 / 60 - 1, tablet: 1000 / 45 - 1, desktop: 0 }[this.tier];
+    this.textureCap = { mobile: 1024, tablet: 1536, desktop: Infinity }[this.tier];
+    this.shadows = this.tier !== "mobile";
+    const saveData = navigator.connection?.saveData === true;
+    const lowMemory = (navigator.deviceMemory ?? 8) <= 2;
+    this.frozen = REDUCED || (this.tier === "mobile" && (saveData || lowMemory));
+
+    const renderer = this.renderer = new THREE.WebGLRenderer({
+      canvas, antialias: false, alpha: true, stencil: false,
+      powerPreference: this.tier === "desktop" ? "high-performance" : "default",
+    });
+    renderer.setClearColor(new THREE.Color("#f0f0f0"), 0);
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.shadowMap.enabled = this.shadows;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.setPixelRatio(this.pixelRatio);
+
+    this.scene = new THREE.Scene();
+    this.scene.background = null;
+    this.camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
+
+    const composer = this.composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(this.scene, this.camera));
+    this.bloomPass = new UnrealBloomPass(new THREE.Vector2(1, 1), sceneConfig.bloom.strength, sceneConfig.bloom.radius, sceneConfig.bloom.threshold);
+    this.bloomPass.enabled = false;
+    composer.addPass(this.bloomPass);
+    composer.addPass(new OutputPass());
+    if (this.tier !== "tablet") { composer.renderTarget1.samples = 4; composer.renderTarget2.samples = 4; }
+
+    const u = this.u = createSceneUniforms();
+    u.uStageDisplay.value = linear("#f0f0f0");
+    u.uMarkDisplay.value = linear("#ffffff");
+    u.uRuleOn.value = 1;
+    u.uArrive.value = 0;
+    u.uArriveEmber.value = linear("#0051ff");
+    u.uArriveLick.value = linear("#9fc2ff");
+    u.uRuleDisplay.value = linear("#000000");
+    u.uRuleImmersedDisplay.value = linear("#ffffff");
+    u.uTideBg.value = linear("#010b24");
+    u.uTideA.value = linear("#061a4d");
+    u.uTideB.value = linear("#0a2a7a");
+    u.uTideC.value = linear("#2e6bff");
+    u.uTideD.value = linear("#9fc2ff");
+    u.uChromeSheen.value = new THREE.Color("#ffffff");
+    u.uChromeDeep.value = new THREE.Color("#c9dcff");
+    u.uWireDisplay.value = linear("#0051ff");
+    u.uWireImmersedDisplay.value = linear("#ffffff");
+    u.uSparkDisplay.value = linear("#9fc2ff");
+
+    this.tiltGroup = new THREE.Group();
+    this.swayGroup = new THREE.Group();
+    this.tiltGroup.add(this.swayGroup);
+    this.scene.add(this.tiltGroup);
+
+    this.brush = new Brush(sceneConfig.brush.points);
+    this.raycaster = new THREE.Raycaster();
+    this.groundPlane = new THREE.Plane();
+    this.scratch = new THREE.Vector3();
+    this.scratch2 = new THREE.Vector3();
+
+    this.R = 1;
+    this.scrollProgress = -1; this.bowProgress = -1; this.arc = 0;
+    this.morph = 0; this.turnTarget = 0; this.scrollTurn = 0; this.turnVelocity = 0;
+    this.tideScroll = 0; this.tideScrollTarget = 0;
+    this.pointer = new THREE.Vector2(); this.pointerTarget = new THREE.Vector2();
+    this.pointerNdc = null; this.pointerMoved = false;
+    this.tideLead = new THREE.Vector2(); this.tideBody = new THREE.Vector2();
+    this.glowAt = new THREE.Vector2(); this.glowPlaced = false;
+    this.elapsed = 0; this.lastTime = 0; this.dirty = true;
+    this.layerInk = [0, 0, 0, 0]; this.inkBoxes = [];
+    this.wordSparks = []; this.wordLattices = []; this.wordSolids = [];
+    this.accentGroup = null; this.accentAngle = 0; this.accentPivot = new THREE.Vector3();
+    this.bustMeshVisible = true;
+    this.modelMaterials = [];
+    this.wireframe = null;
+    this.ready = false; this.inView = true; this.pageVisible = !document.hidden;
+  }
+
+  /* ── Loading ─────────────────────────────────────────────────────────── */
+
+  async load() {
+    const url = this.tier === "mobile" ? sceneConfig.lite.modelUrl : sceneConfig.modelUrl;
+    const draco = new DRACOLoader().setDecoderPath(sceneConfig.dracoDecoderPath);
+    const loader = new GLTFLoader().setDRACOLoader(draco);
+    let gltf;
+    try { gltf = await loader.loadAsync(url); }
+    catch (error) { reportFailure(url, error); throw error; }
+    finally { draco.dispose(); }
+    await nextFrame();
+
+    const model = gltf.scene;
+    const meshes = [];
+    model.traverse((o) => { if (o.isMesh) meshes.push(o); });
+    if (meshes.length === 0) throw new Error("The model has no mesh");
+
+    // Cap the textures to the tier's limit — a frame between maps.
+    if (Number.isFinite(this.textureCap)) {
+      const seen = new Set();
+      for (const mesh of meshes) for (const m of materialsOf(mesh)) for (const key of MAP_KEYS) {
+        const t = m[key];
+        if (!t || seen.has(t)) continue;
+        seen.add(t);
+        if (await capTexture(t, this.textureCap)) await nextFrame();
+      }
+    }
+
+    // Frame.
+    model.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(model);
+    const sphere = box.getBoundingSphere(new THREE.Sphere());
+    const R = this.R = sphere.radius;
+    this.halfExtents = box.getSize(new THREE.Vector3()).multiplyScalar(0.5);
+    model.position.sub(sphere.center);
+
+    const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
+    this.modelMesh = meshes.reduce((a, b) => (b.geometry.getAttribute("position").count > a.geometry.getAttribute("position").count ? b : a));
+    const depthMaterial = patchModelDepthMaterial(this.u);
+    const patched = new Set();
+    for (const mesh of meshes) {
+      mesh.castShadow = mesh.receiveShadow = this.shadows;
+      for (const m of materialsOf(mesh)) {
+        if (patched.has(m)) continue;
+        patched.add(m);
+        if (m.map) m.map.anisotropy = this.tier === "mobile" ? 1 : maxAnisotropy;
+        m.metalness = 0; m.roughness = 0.58;
+        if (m.normalMap) {
+          if (!mesh.geometry.getAttribute("tangent")) { try { mesh.geometry.computeTangents(); } catch (e) { console.warn(e); } }
+          m.normalScale.set(0.7, 0.7);
+        }
+        m.polygonOffset = true; m.polygonOffsetFactor = 1; m.polygonOffsetUnits = 1;
+        patchModelMaterial(m, this.u);
+        this.modelMaterials.push(m);
+      }
+      mesh.customDepthMaterial = depthMaterial;
+    }
+    this.swayGroup.add(model);
+    this.tiltGroup.position.set(0, R * 0.2, R * 0.7);
+    this.scene.updateMatrixWorld(true);
+
+    // Fade thresholds from the geometry's own bounding box.
+    const geometry = this.modelMesh.geometry;
+    geometry.computeBoundingBox(); geometry.computeBoundingSphere();
+    const gb = geometry.boundingBox;
+    const centreY = (gb.min.y + gb.max.y) / 2, halfY = (gb.max.y - gb.min.y) / 2;
+    const { fade } = sceneConfig;
+    this.u.uFadeStartY.value = centreY + halfY * fade.startRatio;
+    this.u.uFadeEndY.value = centreY + halfY * fade.endRatio;
+    this.u.uFadeMeshStartY.value = centreY + halfY * fade.meshStartRatio;
+    this.u.uFadeMeshEndY.value = centreY + halfY * fade.meshEndRatio;
+    this.u.uArriveScale.value = 2.4 / geometry.boundingSphere.radius;
+
+    // R is in world units; the weld and the brush work in the mesh's object space.
+    const meshScale = this.modelMesh.getWorldScale(new THREE.Vector3()).x || 1;
+    this.brush.configure(R / meshScale);
+
+    await nextFrame();
+    if (!this.lite) { this.buildWireframe(R / meshScale, R); await nextFrame(); }
+    this.buildBackground();
+    this.buildEnvironment();
+    this.buildLights(R);
+    await nextFrame();
+    if (!this.lite && this.welded) {
+      try { await this.buildWord(); } catch (error) { console.error(error); reportFailure(sceneConfig.text.modelUrl, error); }
+      await nextFrame();
+    }
+
+    // Inter has to be loaded before the scene paints the name into its atlas.
+    await Promise.allSettled([
+      document.fonts.load('800 64px "Inter"', "Вайбкодинг"),
+      document.fonts.load('700 64px "Inter"', "Вайбкодинг"),
+    ]);
+    await document.fonts.ready;
+    this.resize();
+    this.listen();
+    await this.prewarm();
+    this.ready = true;
+    this.dirty = true;
+    this.unsubscribe = ticker.add((t) => this.tick(t), { getFramerate: () => this.frameBudget });
+  }
+
+  buildWireframe(objectR, R) {
+    const welded = this.welded = buildCoarseWireframe(this.modelMesh.geometry, {
+      cellSize: objectR * sceneConfig.wireframe.cellRatio,
+      surfaceOffset: objectR * sceneConfig.wireframe.surfaceOffsetRatio,
+    });
+    if (!welded) return;
+    const lineMaterial = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
+    patchWireframeMaterial(lineMaterial, this.u);
+    const lines = new THREE.LineSegments(welded.lines, lineMaterial);
+
+    const haloMaterial = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
+    applyScreenBlending(haloMaterial);
+    patchWireframeMaterial(haloMaterial, this.u, { halo: true });
+    const halo = new THREE.LineSegments(welded.lines, haloMaterial);
+    halo.scale.setScalar(sceneConfig.wireframe.haloScale);
+    halo.renderOrder = -1;
+
+    const sparkMaterial = new THREE.PointsMaterial({ size: R * sceneConfig.particles.sizeRatio, sizeAttenuation: true, transparent: true, depthWrite: false });
+    applyScreenBlending(sparkMaterial);
+    patchParticleMaterial(sparkMaterial, this.u);
+    const sparks = new THREE.Points(welded.points, sparkMaterial);
+    sparks.renderOrder = 1;
+
+    for (const o of [lines, halo, sparks]) { o.frustumCulled = false; this.modelMesh.add(o); }
+    this.wireframe = { lines, halo, sparks };
+  }
+
+  buildBackground() {
+    const material = new THREE.MeshBasicMaterial({ depthTest: true, depthWrite: false });
+    patchBackgroundMaterial(material, this.u);
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+    quad.frustumCulled = false;
+    quad.renderOrder = 1;
+    this.scene.add(quad);
+    this.background = quad;
+  }
+
+  buildEnvironment() {
+    const pmrem = new THREE.PMREMGenerator(this.renderer);
+    this.environment = pmrem.fromScene(new RoomEnvironment(), sceneConfig.lighting.environmentBlur).texture;
+    this.scene.environment = this.environment;
+    this.scene.environmentIntensity = sceneConfig.lighting.environmentIntensity;
+    this.scene.background = null;
+
+    // The chrome's own studio: a painted equirectangular strip.
+    const { width, height, sky, ground, horizon, bands, strips } = sceneConfig.chrome.environment;
+    const canvas = document.createElement("canvas");
+    canvas.width = width; canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    const grey = (v) => { const l = Math.round(clamp01(v) * 255); return `rgb(${l}, ${l}, ${l})`; };
+    const hy = horizon * height;
+    let g = ctx.createLinearGradient(0, 0, 0, hy);
+    g.addColorStop(0, grey(sky[0])); g.addColorStop(0.5, grey(sky[1])); g.addColorStop(1, grey(sky[2]));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, width, hy);
+    g = ctx.createLinearGradient(0, hy, 0, height);
+    g.addColorStop(0, grey(ground[0])); g.addColorStop(1, grey(ground[1]));
+    ctx.fillStyle = g; ctx.fillRect(0, hy, width, height - hy);
+    for (const { at, half, value } of bands) {
+      const y0 = (at - half) * height, y1 = (at + half) * height;
+      g = ctx.createLinearGradient(0, y0, 0, y1);
+      g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, `rgba(255,255,255,${value})`); g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, y0, width, y1 - y0);
+    }
+    for (const { at, half, value } of strips) {
+      const x0 = (at - half) * width, x1 = (at + half) * width;
+      g = ctx.createLinearGradient(x0, 0, x1, 0);
+      g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, `rgba(255,255,255,${value})`); g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g; ctx.fillRect(x0, 0, x1 - x0, height);
+    }
+    const source = new THREE.CanvasTexture(canvas);
+    source.mapping = THREE.EquirectangularReflectionMapping;
+    source.colorSpace = THREE.SRGBColorSpace;
+    this.chromeEnvironment = pmrem.fromEquirectangular(source).texture;
+    source.dispose();
+    pmrem.dispose();
+  }
+
+  buildLights(R) {
+    const { lighting, shadow } = sceneConfig;
+    const key = new THREE.DirectionalLight(0xffffff, lighting.keyIntensity);
+    key.position.set(...lighting.keyPosition).multiplyScalar(R);
+    const rim = new THREE.DirectionalLight(0xffffff, lighting.rimIntensity);
+    rim.position.set(...lighting.rimPosition).multiplyScalar(R);
+    if (this.shadows) {
+      key.castShadow = true;
+      key.shadow.mapSize.set(shadow.mapSize, shadow.mapSize);
+      const cam = key.shadow.camera, extent = shadow.extentRatio * R, reach = key.position.length();
+      cam.left = -extent; cam.right = extent; cam.top = extent; cam.bottom = -extent;
+      cam.near = Math.max(0.01, reach - shadow.depthMarginRatio * R);
+      cam.far = reach + shadow.depthMarginRatio * R;
+      cam.updateProjectionMatrix();
+      key.shadow.bias = shadow.bias;
+      key.shadow.normalBias = shadow.normalBias;
+    }
+    this.scene.add(key, key.target, rim, rim.target);
+  }
+
+  async buildWord() {
+    const { text } = sceneConfig, R = this.R;
+    const word = await loadWordModel(text.modelUrl, {
+      dracoDecoderPath: sceneConfig.dracoDecoderPath,
+      width: R * text.widthRatio, maxHeight: R * text.maxHeightRatio,
+    });
+    if (!word) { reportFailure(text.modelUrl); return; }
+    this.u.uWordFillFrom.value = word.minY;
+    this.u.uWordFillTo.value = word.maxY;
+
+    // The word's own group, placed first: on a phone it is shrunk into the gap
+    // between its heading and the copy panel, and the bust's junctions have to
+    // start from where the bust really is in *that* space.
+    this.wordRoot = new THREE.Group();
+    this.swayGroup.add(this.wordRoot);
+    if (STACKED.matches) this.placeWordForPhone(word);
+
+    // The bust's junctions, carried into the space the word lives in.
+    this.scene.updateMatrixWorld(true);
+    const toSway = new THREE.Matrix4().copy(this.wordRoot.matrixWorld).invert().multiply(this.modelMesh.matrixWorld);
+    const bust = this.welded.junctions.slice();
+    const v = new THREE.Vector3();
+    for (let i = 0; i < bust.length; i += 3) {
+      v.set(bust[i], bust[i + 1], bust[i + 2]).applyMatrix4(toSway);
+      bust[i] = v.x; bust[i + 1] = v.y; bust[i + 2] = v.z;
+    }
+
+    const cellSize = R * text.widthRatio * text.cellRatio;
+    const welds = word.parts.map((part) => buildCoarseWireframe(part.geometry, { cellSize, surfaceOffset: R * 0.004 }));
+    let total = 0;
+    const offsets = welds.map((w) => { const at = total; total += w ? w.junctions.length / 3 : 0; return at; });
+    const all = new Float32Array(total * 3);
+    welds.forEach((w, i) => { if (w) all.set(w.junctions, offsets[i] * 3); });
+    const sources = sourceFromJunctions(all, bust);
+
+    let minX = Infinity, maxX = -Infinity;
+    for (let i = 0; i < total; i++) { minX = Math.min(minX, all[i * 3]); maxX = Math.max(maxX, all[i * 3]); }
+    const spanX = Math.max(1e-6, maxX - minX);
+    const delays = new Float32Array(total);
+    for (let i = 0; i < total; i++) {
+      const ordered = (all[i * 3] - minX) / spanX;
+      const h = Math.sin(i * 12.9898) * 43758.5453, noise = h - Math.floor(h);
+      delays[i] = clamp(ordered * 0.75 + noise * 0.25, 0, 1);
+    }
+
+    word.parts.forEach((part, index) => {
+      const weld = welds[index];
+      if (!weld) return;
+      const base = offsets[index];
+      let parent = this.wordRoot;
+      if (part.accent) {
+        this.accentGroup = new THREE.Group();
+        this.accentPivot.copy(part.pivot);
+        this.wordRoot.add(this.accentGroup);
+        parent = this.accentGroup;
+      }
+
+      // Lines: each vertex starts from the source of its junction.
+      const lineCount = weld.lineJunction.length;
+      const lineMorph = new Float32Array(lineCount * 3), lineDelay = new Float32Array(lineCount);
+      for (let i = 0; i < lineCount; i++) {
+        const node = base + weld.lineJunction[i];
+        lineMorph[i * 3] = sources[node * 3]; lineMorph[i * 3 + 1] = sources[node * 3 + 1]; lineMorph[i * 3 + 2] = sources[node * 3 + 2];
+        lineDelay[i] = delays[node];
+      }
+      weld.lines.setAttribute("aMorph", new THREE.BufferAttribute(lineMorph, 3));
+      weld.lines.setAttribute("aDelay", new THREE.BufferAttribute(lineDelay, 1));
+      const nodeCount = weld.junctions.length / 3;
+      weld.points.setAttribute("aMorph", new THREE.BufferAttribute(sources.slice(base * 3, (base + nodeCount) * 3), 3));
+      weld.points.setAttribute("aDelay", new THREE.BufferAttribute(delays.slice(base, base + nodeCount), 1));
+      const solidGeometry = part.geometry;
+      solidGeometry.setAttribute("aMorph", solidGeometry.getAttribute("position").clone());
+      solidGeometry.setAttribute("aDelay", new THREE.BufferAttribute(new Float32Array(solidGeometry.getAttribute("position").count), 1));
+
+      const lineMaterial = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false, depthTest: false });
+      patchWireframeMaterial(lineMaterial, this.u, { lattice: true });
+      const lattice = new THREE.LineSegments(weld.lines, lineMaterial);
+      lattice.renderOrder = 3;
+
+      const nodeMaterial = new THREE.PointsMaterial({ size: R * sceneConfig.particles.sizeRatio, sizeAttenuation: true, transparent: true, depthWrite: false, depthTest: false });
+      applyScreenBlending(nodeMaterial);
+      patchParticleMaterial(nodeMaterial, this.u, { lattice: true });
+      const nodes = new THREE.Points(weld.points, nodeMaterial);
+      nodes.renderOrder = 4;
+
+      const solidMaterial = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, envMapIntensity: sceneConfig.chrome.envMapIntensity, envMap: this.chromeEnvironment });
+      patchWordChromeMaterial(solidMaterial, this.u);
+      const solid = new THREE.Mesh(solidGeometry, solidMaterial);
+      solid.renderOrder = 2;
+
+      for (const o of [lattice, nodes, solid]) { o.frustumCulled = false; o.visible = false; parent.add(o); }
+      this.wordLattices.push(lattice); this.wordSparks.push(nodes); this.wordSolids.push(solid);
+    });
+  }
+
+  /** Phones: fit the word into the band between "Кому подойдёт" and the panel under it. */
+  placeWordForPhone(word) {
+    const w = this.box.clientWidth, h = this.box.clientHeight;
+    const heading = this.stage.querySelector(".word-h1"), panel = this.stage.querySelector(".who-col");
+    if (!w || !h || !heading || !panel) return;
+    this.fit(w, h);
+    const top = (layoutOffset(heading, this.stage).top + heading.offsetHeight) / h;
+    const bottom = layoutOffset(panel, this.stage).top / h;
+    if (bottom - top < 0.08) return;
+    // The frustum's height at the turn axis, and where a screen row lands on it.
+    const depth = this.camera.position.z;
+    const frustum = 2 * depth * Math.tan(((35 * Math.PI) / 180) / 2);
+    const targetY = this.camera.position.y - this.R * 0.1;
+    const centre = (top + bottom) / 2;
+    const wordHeight = Math.max(1e-6, word.maxY - word.minY);
+    const wordWidth = this.R * sceneConfig.text.widthRatio;
+    const scale = Math.min(((bottom - top) * 0.66 * frustum) / wordHeight, (0.7 * frustum * (w / h)) / wordWidth, 1);
+    this.wordRoot.scale.setScalar(scale);
+    this.wordRoot.position.y = targetY + (0.5 - centre) * frustum - ((word.minY + word.maxY) / 2) * scale;
+  }
+
+  /* ── Sizing ──────────────────────────────────────────────────────────── */
+
+  listen() {
+    if (this.tier !== "mobile") {
+      const onResize = () => this.resize();
+      addEventListener("resize", onResize);
+      addEventListener("orientationchange", onResize);
+      new ResizeObserver(onResize).observe(this.box);
+
+      this.box.addEventListener("pointermove", (e) => {
+        const r = this.box.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 2 - 1, y = ((e.clientY - r.top) / r.height) * 2 - 1;
+        this.pointerTarget.set(x, y);
+        (this.pointerNdc ||= new THREE.Vector2()).set(x, -y);
+        this.pointerMoved = true;
+      }, { passive: true });
+      this.box.addEventListener("pointerleave", () => {
+        this.pointerTarget.set(0, 0); this.pointerNdc = null; this.brush.break(); this.dirty = true;
+      }, { passive: true });
+    }
+    new IntersectionObserver(([entry]) => { this.inView = entry.isIntersecting; }, { rootMargin: sceneConfig.inViewRootMargin }).observe(this.runway);
+    document.addEventListener("visibilitychange", () => { this.pageVisible = !document.hidden; });
+  }
+
+  resize() {
+    const w = this.box.clientWidth, h = this.box.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setPixelRatio(this.pixelRatio);
+    this.renderer.setSize(w, h, false);
+    this.composer.setPixelRatio(this.pixelRatio);
+    this.composer.setSize(w, h);
+    const buf = this.renderer.getDrawingBufferSize(this.u.uResolution.value);
+    this.u.uLineEdge.value = sceneConfig.stages.edgePixels / buf.y;
+    this.u.uGlowRadius.value = sceneConfig.pointerGlow.radiusRatio * buf.y;
+    this.placeRules();
+    this.u.uRuleY.value = -1e4;   // the first screen has no rule
+    this.u.uRuleImmersedY.value = -1e4;   // nor does the word screen
+    this.paintInk();
+    this.fit(w, h);
+    this.dirty = true;
+  }
+
+  fit(width, height) {
+    if (!this.halfExtents) return;
+    const mobile = this.tier === "mobile";
+    const fitMargin = mobile ? 1.16 : 1.02;
+    const heightRatio = mobile ? 0 : 0.06;
+    const aspect = width / height, vFov = (35 * Math.PI) / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+    const he = this.halfExtents;
+    const distance = Math.max(he.y / Math.tan(vFov / 2), he.x / Math.tan(hFov / 2)) * fitMargin + he.z;
+    const targetY = this.R * heightRatio;
+    this.camera.aspect = aspect;
+    this.camera.position.set(0, targetY + this.R * 0.1, distance);
+    this.camera.lookAt(0, targetY, 0);
+    this.camera.updateProjectionMatrix();
+  }
+
+  placeRules() {
+    const buf = this.u.uResolution.value, cssW = innerWidth, cssH = this.box.clientHeight;
+    const { stageRule } = sceneConfig;
+    const toRow = (cssY) => Math.floor(buf.y - cssY * (buf.y / cssH)) + 0.5;
+    if (this.tier === "mobile" || STACKED.matches) {
+      const marker = this.stage.querySelector("[data-stage-rule]");
+      if (marker) {
+        const top = marker.getBoundingClientRect().top - this.stage.getBoundingClientRect().top - stageRule.markerGap * cssW;
+        this.u.uRuleY.value = this.u.uRuleImmersedY.value = toRow(top);
+        this.u.uRuleHalf.value = 0.5;
+        return;
+      }
+    }
+    const rowAt = (topRatio) => toRow(cssH - (stageRule.frameRatio - topRatio) * cssW);
+    this.u.uRuleY.value = rowAt(stageRule.topRatio);
+    this.u.uRuleImmersedY.value = rowAt(stageRule.immersedTopRatio);
+    this.u.uRuleHalf.value = 0.5;
+  }
+
+  /* ── The painted type ────────────────────────────────────────────────── */
+
+  paintInk() {
+    const elements = [...this.stage.querySelectorAll("[data-scene-ink]")].slice(0, INK_BOXES);
+    const buf = this.u.uResolution.value;
+    const stageW = this.stage.clientWidth, stageH = this.stage.clientHeight;
+    if (!elements.length || !stageW || !stageH) { this.inkBoxes = []; this.packInk(); return; }
+    const scaleX = buf.x / stageW, scaleY = buf.y / stageH;
+    const measure = (this.measureContext ||= document.createElement("canvas").getContext("2d"));
+
+    const pieces = [];
+    for (const el of elements) {
+      const text = el.textContent.trim();
+      if (!text) continue;
+      const style = getComputedStyle(el);
+      const font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const { left, top } = layoutOffset(el, this.stage);
+      const w = el.offsetWidth, h = el.offsetHeight;
+      measure.font = font;
+      measure.letterSpacing = style.letterSpacing === "normal" ? "0px" : style.letterSpacing;
+      const m = measure.measureText(text);
+      const baseline = (h - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+      const pad = {
+        left: Math.max(0, m.actualBoundingBoxLeft),
+        right: Math.max(0, m.actualBoundingBoxRight - w),
+        top: Math.max(0, m.actualBoundingBoxAscent - baseline),
+        bottom: Math.max(0, baseline + m.actualBoundingBoxDescent - h),
+      };
+      const width = w + pad.left + pad.right, height = h + pad.top + pad.bottom;
+      const parts = el.dataset.sceneInk === "word" ? text.split(/(?<=\s)/) : [...text];
+      let at = 0;
+      const units = parts.map((part, i) => {
+        const start = (pad.left + measure.measureText(text.slice(0, at)).width) / width;
+        at += part.length;
+        return { start, seed: shuffledSeed(i, parts.length) };
+      });
+      const layerEl = el.closest("[data-scene-layer]");
+      const layer = layerEl ? Number(layerEl.dataset.sceneLayer) : 0;
+      const color = new THREE.Color().setStyle(style.color);
+      pieces.push({ el, text, font, spacing: measure.letterSpacing, left, top, w, h, pad, width, height, baseline, units, layer, color });
+    }
+    if (!pieces.length) { this.inkBoxes = []; this.packInk(); return; }
+
+    // The atlas has a scale of its own: at least two atlas pixels per CSS pixel.
+    const GAP = 4;
+    const rawWidth = Math.max(...pieces.map((p) => p.width * scaleX));
+    const rawHeight = pieces.reduce((sum, p) => sum + p.height * scaleY, 0);
+    const { minScale, maxSize } = sceneConfig.stageInk;
+    const boost = Math.max(1, Math.min(minScale / Math.min(scaleX, scaleY), maxSize / Math.max(rawWidth, rawHeight + GAP * pieces.length)));
+    const inkX = scaleX * boost, inkY = scaleY * boost;
+    const atlasW = Math.ceil(rawWidth * boost);
+    const atlasH = Math.ceil(rawHeight * boost + GAP * pieces.length);
+
+    const canvas = (this.inkCanvas ||= document.createElement("canvas"));
+    const resized = canvas.width !== atlasW || canvas.height !== atlasH;
+    canvas.width = atlasW; canvas.height = atlasH;
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, atlasW, atlasH);
+    let cursor = 0;
+    for (const p of pieces) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.translate(0, cursor);
+      ctx.scale(inkX, inkY);
+      ctx.font = p.font;
+      ctx.letterSpacing = p.spacing;
+      ctx.fillStyle = "#fff";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(p.text, p.pad.left, p.pad.top + p.baseline);
+      p.screen = new THREE.Vector4(
+        (p.left - p.pad.left) * scaleX,
+        buf.y - (p.top + p.h + p.pad.bottom) * scaleY,
+        p.width * scaleX,
+        p.height * scaleY,
+      );
+      p.atlas = new THREE.Vector4(0, 1 - (cursor + p.height * inkY) / atlasH, (p.width * inkX) / atlasW, (p.height * inkY) / atlasH);
+      cursor += p.height * inkY + GAP;
+    }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    if (!this.inkTexture) {
+      this.inkTexture = new THREE.CanvasTexture(canvas);
+      this.inkTexture.minFilter = THREE.LinearFilter;
+      this.inkTexture.magFilter = THREE.LinearFilter;
+      this.inkTexture.generateMipmaps = false;
+      this.u.uInkTex.value = this.inkTexture;
+    } else {
+      if (resized) this.inkTexture.dispose();
+      this.inkTexture.needsUpdate = true;
+    }
+    for (const p of pieces) p.el.style.opacity = "0";
+    this.inkBoxes = pieces;
+    this.packInk();
+  }
+
+  packInk() {
+    const u = this.u;
+    let slots = 0, cursor = 0;
+    for (const box of this.inkBoxes) {
+      const fade = this.layerInk[box.layer] ?? 0;
+      if (fade <= 0.0001) continue;
+      if (slots >= INK_BOXES || cursor + box.units.length > INK_UNITS) break;
+      u.uInkScreen.value[slots].copy(box.screen);
+      u.uInkAtlas.value[slots].copy(box.atlas);
+      u.uInkColor.value[slots].set(box.color.r, box.color.g, box.color.b);
+      u.uInkRange.value[slots].set(cursor, box.units.length);
+      for (const unit of box.units) {
+        const t = clamp((fade - unit.seed * 0.6) / 0.4, 0, 1);
+        const eased = t * t * (3 - 2 * t);
+        u.uInkUnit.value[cursor++].set(unit.start, eased ** 2);
+      }
+      slots++;
+    }
+    u.uInkBoxCount.value = slots;
+    this.dirty = true;
+  }
+
+  setInkOpacity(layer, value) {
+    if (layer === 3) this.u.uRuleImmersedFade.value = value;
+    if (this.layerInk[layer] === value) return;
+    this.layerInk[layer] = value;
+    this.packInk();
+  }
+
+  /* ── Prewarm: the whole timeline, under the curtain ─────────────────── */
+
+  async prewarm() {
+    const textures = new Set();
+    this.scene.traverse((o) => {
+      for (const m of o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []) {
+        for (const key of Object.keys(m)) { const v = m[key]; if (v && v.isTexture) textures.add(v); }
+      }
+    });
+    if (this.inkTexture) textures.add(this.inkTexture);
+    for (const t of textures) {
+      if (t.isRenderTargetTexture) continue;
+      try { this.renderer.initTexture(t); } catch (e) { console.warn(e); }
+      await nextFrame();
+    }
+
+    const buf = this.u.uResolution.value;
+    const warm = this.u.uBrush.value[0];
+    warm.set(buf.x / 2, buf.y / 2, buf.y, 1);
+    const real = this.scrollProgress < 0 ? 0 : this.scrollProgress;
+    const stops = this.lite ? [0] : sceneConfig.prewarmStops;
+    const compile = async () => {
+      // Compile the variant that actually renders — into the composer's target.
+      this.renderer.setRenderTarget(this.composer.readBuffer);
+      try { await this.renderer.compileAsync(this.scene, this.camera); } finally { this.renderer.setRenderTarget(null); }
+    };
+    for (const at of stops) {
+      this.scrollProgress = NaN;
+      this.setScrollProgress(at);
+      this.syncHandover();
+      await compile();
+      this.composer.render();
+      await nextFrame();
+    }
+    this.scrollProgress = NaN;
+    this.setScrollProgress(real);
+    await compile();
+    // The warm point has done its job (the net's program is compiled); clear it
+    // before the frame that stays on the canvas, or the mark flashes on arrival.
+    warm.set(0, 0, 0, 0);
+    this.composer.render();
+    await nextFrame();
+    this.syncWireframeVisibility();
+  }
+
+  /* ── Scroll → the scene ─────────────────────────────────────────────── */
+
+  setScrollProgress(progress) {
+    if (progress === this.scrollProgress) return;
+    this.scrollProgress = progress;
+    if (this.lite) { this.turnTarget = progress * sceneConfig.lite.turns * Math.PI * 2; this.dirty = true; return; }
+    const { stages } = sceneConfig, u = this.u;
+    u.uTideY.value = lineAt(progress, stages.tide);
+    u.uDeepY.value = lineAt(progress, stages.deep);
+    this.morph = window01(progress, stages.morph.from, stages.morph.to);
+    u.uMorph.value = this.morph;
+    this.tideScrollTarget = progress;
+    u.uWordFill.value = smoothstep01(progress, sceneConfig.text.fill.from, sceneConfig.text.fill.to);
+    this.syncHandover();
+    this.turnTarget = (window01(progress, 0, 0.74) * 1 + window01(progress, 0.74, 1) * 1) * Math.PI * 2;
+    this.syncWireframeVisibility();
+    this.dirty = true;
+  }
+
+  syncHandover() {
+    const m = this.morph, u = this.u, { text } = sceneConfig;
+    const bust = 1 - smoothstep01(m, 0, text.bustFadeEnd);
+    const spark = smoothstep01(m, text.sparkFadeFrom, text.sparkFadeTo);
+    const line = smoothstep01(m, text.latticeFadeFrom, text.latticeFadeTo);
+    u.uBustFade.value = bust; u.uLatticeSparkFade.value = spark; u.uLatticeFade.value = line;
+    const scaffold = u.uWordFill.value < 0.999, poured = u.uWordFill.value > 0.001;
+    for (const s of this.wordSparks) s.visible = spark > 0.001 && scaffold;
+    for (const l of this.wordLattices) l.visible = line > 0.001 && scaffold;
+    for (const s of this.wordSolids) s.visible = poured;
+    this.bloomPass.enabled = poured && this.wordSolids.length > 0;
+    for (const mat of this.modelMaterials) mat.depthWrite = u.uWordFill.value <= 0.001;
+    this.bustMeshVisible = bust > 0.001;
+    this.syncWireframeVisibility();
+  }
+
+  syncWireframeVisibility() {
+    if (!this.wireframe) return;
+    const lineIsOffscreen = this.u.uTideY.value <= -this.u.uLineEdge.value;
+    const visible = (!lineIsOffscreen || this.brush.active) && this.bustMeshVisible;
+    this.wireframe.lines.visible = this.wireframe.halo.visible = this.wireframe.sparks.visible = visible;
+  }
+
+  /* ── The arrival ─────────────────────────────────────────────────────── */
+
+  arrive() {
+    const R = this.R;
+    const spring = new Spring(0, (a) => {
+      this.u.uArrive.value = a;
+      this.tiltGroup.position.set(0, R * 0.2 * (1 - a), R * 0.7 * (1 - a));
+      this.dirty = true;
+    });
+    spring.to(1, sceneConfig.arrival.spring);
+  }
+
+  /* ── The per-frame tick ─────────────────────────────────────────────── */
+
+  tick(time) {
+    // Visibility is read live: a flag cached at construction missed the page
+    // becoming visible during load and froze the scene on its first frame.
+    if (!this.ready || !this.inView || document.hidden) { this.lastTime = time; return; }
+    const delta = Math.min((time - this.lastTime) / 1000, sceneConfig.motion.maxDeltaSeconds);
+    this.lastTime = time;
+    if (delta <= 0) return;
+    this.elapsed += delta;
+    const u = this.u, buf = u.uResolution.value, glow = u.uGlow.value;
+
+    // The pointer's lamp: chases the cursor, presence fades in and out.
+    const chase = Math.min(1, sceneConfig.pointerGlow.follow * delta);
+    const off = -u.uGlowRadius.value * 3;
+    const toX = this.pointerNdc ? (this.pointerNdc.x * 0.5 + 0.5) * buf.x : off;
+    const toY = this.pointerNdc ? (this.pointerNdc.y * 0.5 + 0.5) * buf.y : off;
+    if (this.glowPlaced) { this.glowAt.x += (toX - this.glowAt.x) * chase; this.glowAt.y += (toY - this.glowAt.y) * chase; }
+    else { this.glowAt.set(toX, toY); this.glowPlaced = true; }
+    const wanted = HOVER.matches ? 1 : 0;
+    const presence = glow.z + (wanted - glow.z) * chase;
+    if (Math.abs(presence - glow.z) > 1e-4 || Math.abs(toX - this.glowAt.x) > 0.5 || Math.abs(toY - this.glowAt.y) > 0.5) this.dirty = true;
+    glow.set(this.glowAt.x, this.glowAt.y, presence);
+
+    // The field's own reading of the scroll, eased.
+    const settle = 1 - Math.exp(-delta / sceneConfig.tideField.scrollResponse);
+    const tideBefore = this.tideScroll;
+    this.tideScroll += (this.tideScrollTarget - this.tideScroll) * settle;
+    u.uTideScroll.value = this.tideScroll;
+    if (Math.abs(this.tideScroll - tideBefore) > 1e-5) this.dirty = true;
+
+    // The turn FOLLOWS the scroll — a critically damped follower.
+    const { turn } = sceneConfig.motion;
+    if (REDUCED) { this.scrollTurn = this.turnTarget; this.turnVelocity = 0; }
+    const pull = this.turnTarget - this.scrollTurn;
+    this.turnVelocity += (pull * turn.stiffness - this.turnVelocity * turn.damping) * delta;
+    this.scrollTurn += this.turnVelocity * delta;
+    if (Math.abs(pull) > 1e-4 || Math.abs(this.turnVelocity) > 1e-4) this.dirty = true;
+
+    const { idleSwayAmplitude, idleSwaySpeed, pointerTilt, pointerDamping } = sceneConfig.motion;
+    const sway = this.frozen || this.lite ? 0 : Math.sin(this.elapsed * idleSwaySpeed) * idleSwayAmplitude;
+    this.swayGroup.rotation.y = sway + this.scrollTurn;
+
+    if (this.tier !== "mobile") {
+      const alpha = 1 - Math.exp(-pointerDamping * delta);
+      this.pointer.lerp(this.pointerTarget, alpha);
+      this.tiltGroup.rotation.y = this.pointer.x * pointerTilt;
+      this.tiltGroup.rotation.x = this.pointer.y * pointerTilt;
+      const frames = delta * 60;
+      this.tideLead.lerp(this.pointerTarget, 1 - (1 - sceneConfig.tideField.pointerLead) ** frames);
+      this.tideBody.lerp(this.tideLead, 1 - (1 - sceneConfig.tideField.pointerBody) ** frames);
+      this.paint();
+      this.brush.update(delta);
+      this.syncWireframeVisibility();
+    }
+    if ((this.frozen || this.lite) && !this.dirty && !this.brush.active) return;
+    this.dirty = false;
+
+    this.spinAccent(delta);
+    this.trackLineBow(delta);
+    this.projectBrush();
+    u.uMarkTime.value = this.elapsed * sceneConfig.brush.noiseDrift;
+    u.uArriveTime.value = this.elapsed * sceneConfig.arrival.noiseDrift;
+    u.uGrainSeed.value = Math.floor(this.elapsed * sceneConfig.grain.fps);
+    u.uTideTime.value = this.elapsed;
+    const aspect = buf.x / Math.max(1, buf.y);
+    u.uTidePointer.value.set(this.tideBody.x * 0.5 * aspect, -this.tideBody.y * 0.5);
+    u.uTideVelocity.value.set((this.tideLead.x - this.tideBody.x) * 0.5 * aspect, -(this.tideLead.y - this.tideBody.y) * 0.5);
+    this.composer.render();
+  }
+
+  paint() {
+    if (!this.pointerMoved) return;
+    this.pointerMoved = false;
+    if (!this.pointerNdc || !this.modelMesh) return;
+    this.raycaster.setFromCamera(this.pointerNdc, this.camera);
+    const hits = this.bustMeshVisible ? this.raycaster.intersectObject(this.modelMesh, false) : [];
+    let point = null;
+    if (hits.length) point = hits[0].point.clone();
+    else {
+      this.camera.getWorldDirection(this.scratch);
+      this.groundPlane.setFromNormalAndCoplanarPoint(this.scratch, this.scratch2.set(0, 0, 0));
+      point = this.raycaster.ray.intersectPlane(this.groundPlane, new THREE.Vector3());
+    }
+    if (!point) { this.brush.break(); return; }
+    this.modelMesh.worldToLocal(point);
+    this.brush.add(point);
+    this.dirty = true;
+  }
+
+  projectBrush() {
+    const out = this.u.uBrush.value;
+    if (!this.modelMesh) return;
+    const buf = this.u.uResolution.value;
+    const perUnit = (buf.y * 0.5) / Math.tan(((35 * Math.PI) / 180) * 0.5);
+    const radius = this.R * sceneConfig.brush.radiusRatio, taper = sceneConfig.brush.taper, size = sceneConfig.brush.points;
+    const { head, ends, life, points } = this.brush;
+    const p = this.scratch;
+    let first = -1;
+    for (let k = 0; k < size; k++) if (life[(head + k) % size] > 0) { first = k; break; }
+    if (first < 0) { for (let k = 0; k < size; k++) out[k].w = 0; return; }
+    const span = Math.max(1, size - 1 - first);
+    for (let k = 0; k < size; k++) {
+      const slot = (head + k) % size;
+      if (life[slot] <= 0) { out[k].w = 0; continue; }
+      p.copy(points[slot]); this.modelMesh.localToWorld(p);
+      const distance = Math.max(1e-4, p.distanceTo(this.camera.position));
+      p.project(this.camera);
+      const along = (k - first) / span;
+      const width = radius * (taper + (1 - taper) * along) * (0.3 + 0.7 * life[slot]);
+      const joined = !ends[slot] && k < size - 1;
+      const scaled = (width * perUnit) / distance;
+      out[k].set((p.x * 0.5 + 0.5) * buf.x, (p.y * 0.5 + 0.5) * buf.y, joined ? scaled : -scaled, life[slot]);
+    }
+  }
+
+  trackLineBow(delta) {
+    const { stages } = sceneConfig;
+    let speed = 0;
+    if (this.scrollProgress >= 0 && this.bowProgress >= 0) speed = Math.abs(this.scrollProgress - this.bowProgress) / delta;
+    if (this.scrollProgress >= 0) this.bowProgress = this.scrollProgress;
+    const wanted = clamp(speed / stages.bowSpeed, 0, 1);
+    this.arc += (wanted - this.arc) * (1 - Math.exp(-delta / stages.bowResponse));
+    if (this.arc > 1e-4) this.dirty = true;
+    this.u.uLineBow.value = this.arc * stages.bowHeight;
+    this.u.uTideSurge.value = this.arc;
+  }
+
+  spinAccent(delta) {
+    if (!this.accentGroup) return;
+    const speed = smoothstep01(this.morph, sceneConfig.text.accentSpinFrom, 1);
+    if (speed <= 0 && this.accentAngle === 0) return;
+    this.accentAngle += delta * sceneConfig.text.accentSpin * Math.PI * 2 * speed;
+    const a = this.accentAngle, cos = Math.cos(a), sin = Math.sin(a), { x, z } = this.accentPivot;
+    this.accentGroup.rotation.y = a;
+    this.accentGroup.position.x = x - (x * cos + z * sin);
+    this.accentGroup.position.z = z - (-x * sin + z * cos);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The page
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const html = document.documentElement;
+const stage = document.querySelector("[data-stage]");
+const runway = document.querySelector("[data-runway]");
+const canvasBox = document.querySelector("[data-canvas-box]");
+const heroSection = document.querySelector(".hero");
+
+/* ── How much of the 100lvh stage the browser's toolbars cover, measured once ── */
+{
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100lvh;visibility:hidden;pointer-events:none";
+  document.body.append(probe);
+  const covered = Math.max(0, probe.offsetHeight - innerHeight);
+  probe.remove();
+  if (covered > 0) {
+    document.documentElement.style.setProperty("--ui-cover", `max(calc(100lvh - 100svh), ${covered}px) + env(safe-area-inset-bottom, 0px)`);
+  }
+}
+
+/* ── The name's subtitle hangs from the name's own box ── */
+{
+  const name = document.querySelector(".name");
+  const sub = document.querySelector("[data-name-sub]");
+  const by = document.querySelector("[data-name-by]");
+  const place = () => {
+    if (!name || !sub || !by) return;
+    const left = name.offsetLeft - name.offsetWidth / 2;   // the name is centred with translate: -50%
+    const top = `${name.offsetTop + name.offsetHeight}px`;
+    sub.style.setProperty("--sub-left", `${Math.max(left, 0)}px`);
+    sub.style.setProperty("--sub-top", top);
+    // The signature sits on the other side of the subject, under "host:".
+    if (STACKED.matches) {
+      // No room either side of the subject on a portrait screen: the signature
+      // goes on the line under the channel's name instead.
+      by.style.setProperty("--sub-left", `${Math.max(left, 0)}px`);
+      by.style.setProperty("--sub-top", `${name.offsetTop + name.offsetHeight + sub.offsetHeight}px`);
+      return;
+    }
+    const byLeft = Math.min(left + name.offsetWidth * 0.72, by.offsetParent.clientWidth - by.offsetWidth - 16);
+    by.style.setProperty("--sub-left", `${Math.max(byLeft, 0)}px`);
+    by.style.setProperty("--sub-top", top);
+  };
+  place();
+  document.fonts.ready.then(place);
+  addEventListener("resize", place);
+}
+
+/* ── The rem grid above 1920px ── */
+const scaleRoot = () => {
+  const size = 16 - (16 * (((1920 - innerWidth) / 1920) * 100 * 0.6666)) / 100;
+  if (size > 16) html.style.fontSize = `${size}px`; else html.style.removeProperty("font-size");
+};
+scaleRoot();
+let lastWidth = innerWidth;
+addEventListener("resize", () => { if (innerWidth !== lastWidth) { lastWidth = innerWidth; scaleRoot(); } });
+
+/* ── Tier reload ── */
+{
+  let timer = 0;
+  addEventListener("resize", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { if (readTier() !== TIER) location.reload(); }, sceneConfig.tierReloadSettleMs);
+  });
+}
+
+/* ── Assets referenced from the markup ── */
+const watchImage = (img, url) => {
+  img.addEventListener("error", () => reportFailure(url), { once: true });
+  img.src = url;
+};
+for (const img of document.querySelectorAll("img[data-asset]")) watchImage(img, asset(img.dataset.asset));
+for (const link of document.querySelectorAll("[data-join]")) link.href = TELEGRAM_URL;
+
+/* ── The lite path: the tide and the word become two still sections ── */
+const stills = [];
+if (LITE) {
+  runway.style.height = `${sceneConfig.lite.runwayViewports * 100}lvh`;
+  for (const anchor of runway.querySelectorAll("[data-anchor]")) anchor.remove();
+  let after = heroSection;
+  for (const spec of [{ layer: 2, src: "hero/immersed-still.webp", id: "method" }, { layer: 3, src: "hero/delivery-still.webp", id: "deliverables" }]) {
+    const layer = stage.querySelector(`[data-scene-layer="${spec.layer}"]`);
+    const section = document.createElement("section");
+    section.className = "still"; section.id = spec.id;
+    section.style.setProperty("--stage-reveal", "0");
+    const img = document.createElement("img");
+    img.alt = ""; img.width = 880; img.height = 1912; img.decoding = "async";
+    watchImage(img, asset(spec.src));
+    const copy = document.createElement("div");
+    copy.className = "still-copy";
+    copy.append(...layer.childNodes);
+    for (const el of copy.querySelectorAll("[data-scene-ink]")) { el.removeAttribute("data-scene-ink"); el.dataset.reveal = "letter"; }
+    section.append(img, copy);
+    after.after(section);
+    after = section;
+    layer.remove();
+    stills.push({ section, img });
+  }
+}
+
+/* ── StageReveal: type that resolves unit by unit, in CSS ── */
+for (const el of document.querySelectorAll("[data-reveal]")) {
+  const mode = el.dataset.reveal, floor = Number(el.dataset.floor || 0);
+  const text = el.textContent.trim();
+  el.textContent = "";
+  const real = document.createElement("span");
+  real.className = "sr-only"; real.textContent = text;
+  const shown = document.createElement("span");
+  shown.setAttribute("aria-hidden", "true");
+  const units = mode === "letter" ? [...text] : text.split(/(?<=\s)/);
+  units.forEach((unit, i) => {
+    const s = document.createElement("span");
+    s.textContent = unit;
+    s.style.display = "inline-block";
+    s.style.whiteSpace = "pre";
+    const seed = shuffledSeed(i, units.length) * 0.6;
+    s.style.opacity = `max(${floor}, calc((var(--stage-reveal, 1) - ${seed.toFixed(4)}) / 0.4))`;
+    shown.append(s);
+  });
+  el.append(real, shown);
+}
+
+/* ── stageRise: a block rising into place ── */
+const stageRise = (at, span = sceneConfig.arrival.copySpan) => {
+  const share = `clamp(0, calc((var(--stage-reveal, 1) - ${at.toFixed(3)}) / ${span.toFixed(3)}), 1)`;
+  return { opacity: share, transform: `translateY(calc((1 - ${share}) * var(--stage-rise)))` };
+};
+for (const el of document.querySelectorAll("[data-rise]")) Object.assign(el.style, stageRise(Number(el.dataset.rise)));
+
+/* ── Smooth scroll, driven from the shared ticker at the highest priority ── */
+const lenis = new Lenis({ smoothWheel: true, syncTouch: true });
+ticker.add((time) => lenis.raf(time), { priority: -100, getFramerate: () => 0 });
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest?.('a[href^="#"]');
+  if (!link) return;
+  const target = document.getElementById(link.getAttribute("href").slice(1));
+  if (!target) return;
+  event.preventDefault();
+  closeMenu();
+  lenis.scrollTo(target);
+});
+
+/* ── The opening curtain ── */
+const curtain = (() => {
+  const el = document.querySelector("[data-preloader]");
+  const count = el.querySelector("[data-count]");
+  const listeners = [];
+  let sceneReady = false, floor = false, finishing = false, released = false;
+  const release = () => { if (released) return; released = true; for (const fn of listeners) fn(); };
+
+  html.classList.add("is-locked");
+  lenis.stop();
+  scrollTo(0, 0);
+  const counter = new Spring(0, (v) => { count.textContent = String(Math.round(v * 100)); });
+  counter.to(preloaderConfig.hold, preloaderConfig.fill);
+  setTimeout(() => { floor = true; check(); }, preloaderConfig.minShow);
+
+  function check() {
+    if (!sceneReady || !floor || finishing) return;
+    finishing = true;
+    counter.to(1, preloaderConfig.finish, () => {
+      scrollTo(0, 0);
+      lenis.scrollTo(0, { immediate: true, force: true });
+      const exit = new Spring(0, (v) => {
+        el.style.transform = `translate3d(0, -${v * 100}%, 0)`;
+        if (v >= preloaderConfig.releaseAt) release();
+      });
+      exit.to(1, preloaderConfig.exit, () => {
+        release();
+        el.remove();
+        html.classList.remove("is-locked");
+        lenis.start();
+        lenis.resize();
+      });
+    });
+  }
+  return {
+    ready() { if (sceneReady) return; sceneReady = true; check(); },
+    onRelease(fn) { if (released) fn(); else listeners.push(fn); },
+  };
+})();
+
+/* ── The runway's layers ── */
+let scene = null;
+const layers = [...stage.querySelectorAll("[data-scene-layer]")].sort((a, b) => a.dataset.sceneLayer - b.dataset.sceneLayer);
+const windows = LITE ? LITE_WINDOWS : LAYER_WINDOWS;
+let runwayProgress = 0, entrance = 0;
+const autoLayers = windows.map((w) => (w.auto ? { shown: false, value: 0, spring: null } : null));
+autoLayers.forEach((a) => { if (a) a.spring = new Spring(0, (v) => { a.value = v; paintLayers(); }); });
+
+const windowValue = (i, p) => {
+  const w = windows[i];
+  if (w.auto) return autoLayers[i].value;
+  const rising = w.hold > w.in ? clamp((p - w.in) / (w.hold - w.in)) : 1;
+  const falling = w.end > w.out ? clamp((w.end - p) / (w.end - w.out)) : 1;
+  return Math.min(rising, falling);
+};
+function paintLayers() {
+  windows.forEach((w, i) => {
+    const layer = layers[i];
+    if (!layer) return;
+    const v = windowValue(i, runwayProgress);
+    layer.style.opacity = String(v);
+    layer.style.visibility = v <= 0.001 ? "hidden" : "visible";
+    layer.style.setProperty("--stage-reveal", String(entrance * v));
+    scene?.setInkOpacity(i, entrance * v);
+  });
+}
+const updateLayers = () => {
+  windows.forEach((w, i) => {
+    if (!w.auto) return;
+    const a = autoLayers[i];
+    const shown = runwayProgress >= w.in && runwayProgress < w.end;
+    if (shown === a.shown) return;
+    a.shown = shown;
+    a.spring.to(shown ? 1 : 0, shown ? sceneConfig.inkLetters.entrance : sceneConfig.inkLetters.exit);
+  });
+  paintLayers();
+};
+
+scrollTrigger(runway, "top top", "bottom bottom", (p) => {
+  runwayProgress = p;
+  scene?.setScrollProgress(p);
+  updateLayers();
+});
+
+const entranceSpring = new Spring(0, (v) => { entrance = v; paintLayers(); });
+curtain.onRelease(() => {
+  if (scene?.ready) scene.arrive();
+  setTimeout(() => entranceSpring.to(1, sceneConfig.inkLetters.entrance), sceneConfig.arrival.inkDelay);
+});
+
+/* ── The scene ── */
+(async () => {
+  const canvasFade = new Spring(0, (v) => { canvasBox.style.opacity = String(v); });
+  const showPoster = () => {
+    const poster = canvasBox.querySelector("[data-poster]");
+    poster.hidden = false;
+    watchImage(poster, asset("hero/model-poster.webp"));
+    canvasBox.querySelector("canvas").style.display = "none";
+    canvasFade.to(1);
+  };
+  // The display face must have loaded before the scene paints the name.
+  const fontUrl = "fonts/Inter-V.ttf";
+  document.fonts.load('800 64px "Inter"').then((faces) => { if (!faces.length) reportFailure(fontUrl); }).catch((e) => reportFailure(fontUrl, e));
+  try {
+    scene = new ModelScene({ stage, box: canvasBox, canvas: canvasBox.querySelector("canvas"), runway });
+    scene.setScrollProgress(runwayProgress);
+    await scene.load();
+    paintLayers();
+    canvasFade.to(1);
+  } catch (error) {
+    console.error("[scene]", error);
+    try { scene?.renderer?.dispose(); } catch {}
+    scene = null;
+    reportFailure(error?.message ? `WebGL scene — ${error.message}` : "WebGL scene");
+    showPoster();
+  }
+  curtain.ready();
+})();
+
+/* ── The floating bar ── */
+const navbar = document.querySelector("[data-navbar]");
+const navMenu = document.querySelector("[data-nav-menu]");
+const navDisc = document.querySelector("[data-nav-disc]");
+const paintNav = (value) => {
+  navbar.style.opacity = String(value);
+  navbar.style.visibility = value <= 0.001 ? "hidden" : "visible";
+  for (const shell of navbar.querySelectorAll("[data-nav-shell]")) {
+    const w = shell.offsetWidth, h = shell.offsetHeight;
+    if (!w || !h) continue;
+    const hidden = Math.max(0, (1 - value) * (w - h)), r = h / 2;
+    if (value >= 0.999) { shell.style.clipPath = "none"; continue; }
+    shell.style.clipPath = shell.dataset.navFromLeft === undefined
+      ? `inset(0 0 0 ${hidden}px round ${r}px)`
+      : `inset(0 ${hidden}px 0 0 round ${r}px)`;
+  }
+  navbar.querySelectorAll("[data-nav-item]").forEach((item, i) => {
+    const offset = i * sceneConfig.stageNav.itemStagger, own = Math.max(0.0001, 1 - offset);
+    const t = Math.min(1, Math.max(0, (value - offset) / own));
+    item.style.opacity = String(t * t * (3 - 2 * t));
+  });
+};
+const navSpring = new Spring(0, paintNav);
+let navWanted = false;
+const marker = document.querySelector("[data-marker]");
+scrollTrigger(marker, "top top", "bottom bottom", (p) => {
+  const travel = Math.max(1, marker.offsetHeight - innerHeight);
+  const scrolled = p * travel;
+  const closingTop = document.querySelector(".closing-section")?.getBoundingClientRect().top ?? Infinity;
+  const wanted = scrolled >= innerHeight && closingTop > innerHeight * 0.55;
+  if (wanted === navWanted) return;
+  navWanted = wanted;
+  if (!wanted) closeMenu();
+  navSpring.to(wanted ? 1 : 0, wanted ? sceneConfig.stageNav.enter : sceneConfig.stageNav.leave);
+});
+addEventListener("resize", () => paintNav(navSpring.value));
+
+const menuSpring = new Spring(0, (v) => {
+  navMenu.style.opacity = String(v);
+  navMenu.style.transform = `translate3d(0, ${(1 - v) * 0.75}rem, 0)`;
+});
+function openMenu() {
+  navMenu.hidden = false;
+  navDisc.setAttribute("aria-expanded", "true");
+  navDisc.setAttribute("aria-label", "Close menu");
+  menuSpring.to(1, sceneConfig.stageNav.enter);
+}
+function closeMenu() {
+  if (navMenu.hidden) return;
+  navDisc.setAttribute("aria-expanded", "false");
+  navDisc.setAttribute("aria-label", "Open menu");
+  menuSpring.to(0, sceneConfig.stageNav.leave, () => { navMenu.hidden = true; });
+}
+navDisc.addEventListener("click", () => (navDisc.getAttribute("aria-expanded") === "true" ? closeMenu() : openMenu()));
+addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+
+/* ── Reviews and student cases: a swipeable carousel ── */
+{
+  const track = document.querySelector("[data-reviews-track]");
+  const dots = document.querySelector("[data-reviews-dots]");
+  REVIEWS.forEach((review, i) => {
+    const li = document.createElement("li");
+    li.className = "review";
+    li.innerHTML = `
+      <div class="review-photo">${review.photo ? `<img src="${review.photo}" alt="" loading="lazy">` : "<span>фото / скриншот проекта</span>"}</div>
+      <span class="review-tag">${review.tag}</span>
+      <blockquote class="review-quote">${review.text}</blockquote>
+      <div class="review-who"><span class="review-avatar" aria-hidden="true"></span><span><b>${review.name}</b><br>${review.project}</span></div>`;
+    track.append(li);
+    const dot = document.createElement("span");
+    dot.className = "reviews-dot" + (i === 0 ? " is-on" : "");
+    dots.append(dot);
+  });
+
+  const cards = [...track.children];
+  const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth);
+  document.querySelector("[data-reviews-prev]").addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+  document.querySelector("[data-reviews-next]").addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+  track.addEventListener("scroll", () => {
+    const at = Math.round(track.scrollLeft / Math.max(1, step()));
+    [...dots.children].forEach((d, i) => d.classList.toggle("is-on", i === Math.min(at, cards.length - 1)));
+  }, { passive: true });
+
+  // A mouse can drag the strip too; touch and trackpads scroll it natively.
+  let drag = null;
+  track.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse") return;
+    drag = { x: e.clientX, left: track.scrollLeft, moved: false };
+    track.classList.add("is-dragging");
+  });
+  addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 3) drag.moved = true;
+    track.scrollLeft = drag.left - dx;
+  });
+  addEventListener("pointerup", () => {
+    if (!drag) return;
+    drag = null;
+    track.classList.remove("is-dragging");
+    // Settle on the nearest card.
+    const s = step();
+    track.scrollTo({ left: Math.round(track.scrollLeft / s) * s, behavior: "smooth" });
+  });
+
+  // Cards rise into place as the section arrives.
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) if (entry.isIntersecting) { entry.target.classList.add("is-in"); io.unobserve(entry.target); }
+  }, { threshold: 0.15 });
+  io.observe(document.querySelector(".reviews-head"));
+  cards.forEach((c) => io.observe(c));
+}
+
+/* ── The closing screen ── */
+{
+  const section = document.querySelector(".closing-section");
+  const closing = section.querySelector("[data-closing]");
+  // The parallax: heading lags, copy leads, as the screen comes up.
+  scrollTrigger(section, "top bottom", "top top", (q) => closing.style.setProperty("--closing-travel", String(q)));
+  const closingSpring = new Spring(0, (v) => closing.style.setProperty("--stage-reveal", String(v)));
+  const closingIo = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    closingIo.disconnect();
+    closingSpring.to(1, sceneConfig.inkLetters.entrance);
+  }, { threshold: 0.2 });
+  closingIo.observe(closing);
+}
+
+/* ── The magnetic control ── */
+if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  for (const control of document.querySelectorAll("[data-magnetic]")) {
+    const label = control.firstElementChild;
+    let x = 0, y = 0;
+    const paint = () => { label.style.transform = `translate3d(${x}px, ${y}px, 0)`; };
+    const sx = new Spring(0, (v) => { x = v; paint(); });
+    const sy = new Spring(0, (v) => { y = v; paint(); });
+    control.addEventListener("pointermove", (e) => {
+      const box = control.getBoundingClientRect();
+      sx.to((e.clientX - (box.left + box.width / 2)) * magneticConfig.pull, magneticConfig.config);
+      sy.to((e.clientY - (box.top + box.height / 2)) * magneticConfig.pull, magneticConfig.config);
+    }, { passive: true });
+    control.addEventListener("pointerleave", () => { sx.to(0, magneticConfig.config); sy.to(0, magneticConfig.config); }, { passive: true });
+  }
+}
+
+/* ── The lite stills: drift against the scroll ── */
+for (const { section, img } of stills) {
+  const { travel, spring } = sceneConfig.lite.stillParallax;
+  const drift = new Spring(0.5, (v) => { img.style.transform = `translate3d(0, ${(v - 0.5) * travel * 0.5}%, 0)`; });
+  scrollTrigger(section, "top bottom", "bottom top", (q) => drift.to(q, spring));
+  const reveal = new Spring(0, (v) => section.style.setProperty("--stage-reveal", String(v)));
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    io.disconnect();
+    reveal.to(1, sceneConfig.inkLetters.entrance);
+  }, { threshold: 0.2 });
+  io.observe(section);
+}
+</script>
+</body>
+</html>
