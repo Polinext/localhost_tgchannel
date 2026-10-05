@@ -73,6 +73,9 @@
   --frame-heading-top: 10lvh;
   --frame-navbar: var(--frame-control);
   --stage-rise: 1.5rem;
+  /* 1vw, unless the window is wide and short: then the height decides, so the
+     bottom-anchored columns never climb into their screen's heading. */
+  --u: min(1vw, 1.75vh);
   /* How much of a 100lvh stage the browser's toolbars cover on a phone, plus the home indicator. */
   --ui-cover: calc(100lvh - 100svh + env(safe-area-inset-bottom, 0px));
 }
@@ -107,7 +110,7 @@ main { position: relative; background: #f0f0f0; }
 
 /* ── The runway & stage ── */
 .hero { position: relative; }
-.runway { position: relative; height: 700lvh; }
+.runway { position: relative; height: 850lvh; }   /* 7 screens of story + 1.5 of pause on "Что внутри канала" */
 .stage { position: sticky; top: 0; height: 100lvh; width: 100%; overflow: hidden; }
 .layer { position: absolute; inset: 0; }
 .layer--over { pointer-events: none; }
@@ -147,20 +150,20 @@ main { position: relative; background: #f0f0f0; }
 @media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
   .hero-col { width: calc(100% - var(--frame-gutter) * 2); }
 }
-.inside-col { position: absolute; left: var(--frame-gutter); bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); width: min(34vw, 660px); display: flex; flex-direction: column; align-items: flex-start; gap: max(16px, 1.6vw); color: #fff; }
+.inside-col { position: absolute; left: var(--frame-gutter); bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); width: min(34vw, 660px); display: flex; flex-direction: column; align-items: flex-start; gap: max(16px, calc(var(--u) * 1.6)); color: #fff; }
 .inside-list { display: flex; flex-direction: column; width: 100%; }
-.inside-list li { padding-block: max(8px, 0.75vw); border-top: 1px solid rgb(255 255 255 / 0.3); font: 700 max(17px, 1.75vw)/1.15 var(--font-sans); letter-spacing: -0.015em; }
-.inside-list li { display: flex; align-items: center; justify-content: space-between; gap: max(12px, 1.1vw); }
+.inside-list li { padding-block: max(8px, calc(var(--u) * 0.75)); border-top: 1px solid rgb(255 255 255 / 0.3); font: 700 max(17px, calc(var(--u) * 1.75))/1.15 var(--font-sans); letter-spacing: -0.015em; }
+.inside-list li { display: flex; align-items: center; justify-content: space-between; gap: max(12px, calc(var(--u) * 1.1)); }
 .inside-text { flex: 1; min-width: 0; }
-.thumb { flex: none; display: grid; place-items: center; width: max(64px, 5.4vw); aspect-ratio: 4 / 3; overflow: hidden; border-radius: max(8px, 0.6vw); border: 1px dashed rgb(255 255 255 / 0.45); background: rgb(255 255 255 / 0.06); font: 600 max(10px, 0.7vw)/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: rgb(255 255 255 / 0.5); }
+.thumb { flex: none; display: grid; place-items: center; width: max(64px, calc(var(--u) * 5.4)); aspect-ratio: 4 / 3; overflow: hidden; border-radius: max(8px, calc(var(--u) * 0.6)); border: 1px dashed rgb(255 255 255 / 0.45); background: rgb(255 255 255 / 0.06); font: 600 max(10px, calc(var(--u) * 0.7))/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: rgb(255 255 255 / 0.5); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .thumb:has(img) { border-style: solid; border-color: rgb(255 255 255 / 0.25); }
 .inside-list li:last-child { border-bottom: 1px solid rgb(255 255 255 / 0.3); }
 .inside-list b { color: #9fc2ff; font-weight: 800; }
 .inside-note { font: 500 var(--frame-body)/1.3 var(--font-sans); opacity: 0.85; }
-.inside-save { position: relative; margin-top: 0.4em; font: 800 max(36px, 4.6vw)/0.95 var(--font-sans); letter-spacing: -0.04em; color: #9fc2ff; white-space: nowrap; }
+.inside-save { position: relative; margin-top: 0.4em; font: 800 max(36px, calc(var(--u) * 4.6))/0.95 var(--font-sans); letter-spacing: -0.04em; color: #9fc2ff; white-space: nowrap; }
 /* "экономия" — a framed tag pinned to the figure's corner, at an angle */
-.save-tag { position: absolute; left: calc(100% - 0.55em); top: -0.5em; transform: rotate(-9deg); transform-origin: 0% 100%; padding: 0.35em 0.7em; border: 2px solid #fff; border-radius: 0.4em; background: #0051ff; box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); font: 800 max(13px, 1.05vw)/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+.save-tag { white-space: nowrap; position: relative; display: table; margin-top: 0.45em; transform: rotate(-3deg); transform-origin: 0% 50%; padding: 0.35em 0.7em; border: 2px solid #fff; border-radius: 0.4em; background: #0051ff; box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); font: 800 max(13px, calc(var(--u) * 1.05))/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
 .inside-label { display: flex; align-items: center; gap: 0.6em; padding-block: max(10px, 0.9vw) max(4px, 0.4vw) !important; border-top: 1px solid rgb(255 255 255 / 0.3); font: 700 max(13px, 1.05vw)/1 var(--font-sans) !important; letter-spacing: 0.06em !important; text-transform: uppercase; color: #9fc2ff; }
 .inside-label + .inside-fresh { border-top: 0; }
 .inside-fresh { padding-left: 1.1em; border-left: 2px solid #9fc2ff; }
@@ -172,10 +175,10 @@ main { position: relative; background: #f0f0f0; }
   .inside-col { width: calc(100% - var(--frame-gutter) * 2); padding: 16px 16px 20px; border-radius: 20px; background: rgb(1 11 36 / 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 }
 .who-col { position: absolute; left: var(--frame-gutter); bottom: calc(var(--frame-navbar) + var(--frame-gutter) * 2); width: min(32vw, 620px); display: flex; flex-direction: column; color: #fff; }
-.who-col li { display: grid; grid-template-columns: max(30px, 2.6vw) 1fr; column-gap: max(10px, 0.9vw); row-gap: 0.35em; padding-block: max(10px, 1vw); border-top: 1px solid rgb(255 255 255 / 0.3); }
+.who-col li { display: grid; grid-template-columns: max(30px, calc(var(--u) * 2.6)) 1fr; column-gap: max(10px, calc(var(--u) * 0.9)); row-gap: 0.35em; padding-block: max(10px, calc(var(--u) * 1)); border-top: 1px solid rgb(255 255 255 / 0.3); }
 .who-col li:last-child { border-bottom: 1px solid rgb(255 255 255 / 0.3); }
-.who-num { grid-row: span 2; font: 800 max(13px, 1.05vw)/1.5 var(--font-sans); color: #9fc2ff; }
-.who-title { font: 800 max(18px, 1.85vw)/1.1 var(--font-sans); letter-spacing: -0.02em; }
+.who-num { grid-row: span 2; font: 800 max(13px, calc(var(--u) * 1.05))/1.5 var(--font-sans); color: #9fc2ff; }
+.who-title { font: 800 max(18px, calc(var(--u) * 1.85))/1.1 var(--font-sans); letter-spacing: -0.02em; }
 .who-text { font: 500 var(--frame-body)/1.3 var(--font-sans); opacity: 0.85; }
 @media (max-width: 1179px) and (max-aspect-ratio: 1/1) {
   .who-col { width: calc(100% - var(--frame-gutter) * 2); padding: 4px 16px; border-radius: 20px; background: rgb(1 11 36 / 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
@@ -293,7 +296,8 @@ main { position: relative; background: #f0f0f0; }
 .reviews-arrows { display: flex; gap: 10px; flex: none; }
 .reviews-arrow { width: max(46px, 3.4vw); height: max(46px, 3.4vw); border-radius: 50%; border: 1px solid rgb(255 255 255 / 0.3); color: #fff; font: 600 max(18px, 1.3vw)/1 var(--font-sans); transition: background-color 150ms var(--ease-entrance), color 150ms var(--ease-entrance); }
 .reviews-arrow:hover { background: #fff; color: #010b24; }
-.reviews-track { display: flex; gap: max(14px, 1.4vw); margin-top: max(24px, 2.4vw); padding: 4px var(--frame-gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--frame-gutter); scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; }
+.reviews-track { display: flex; gap: max(14px, 1.4vw); margin-top: max(4px, 0.6vw); padding: 28px var(--frame-gutter) 32px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: var(--frame-gutter); scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y; cursor: grab; }
+/* Sideways only: tilted stickers and hover lifts must not give the strip a vertical scroll. */
 .reviews-track::-webkit-scrollbar { display: none; }
 .reviews-track.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
 .review { flex: 0 0 min(380px, 80vw); scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; padding: 16px 16px 20px; border-radius: 24px; background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.12); opacity: 0; transform: translateY(32px); transition: opacity 700ms var(--ease-entrance), transform 700ms var(--ease-entrance); }
@@ -310,6 +314,96 @@ main { position: relative; background: #f0f0f0; }
 .reviews-dot { width: 6px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.3); transition: width 250ms var(--ease-entrance), background-color 250ms var(--ease-entrance); }
 .reviews-dot.is-on { width: 20px; background: #fff; }
 @media (prefers-reduced-motion: reduce) { .reviews-head, .review { opacity: 1; transform: none; transition: none; } }
+
+
+/* ── The featured case: a video with screenshots pinned over its corners ── */
+.review--case { flex-basis: min(440px, 84vw); }
+.case-stage { position: relative; aspect-ratio: 1 / 1.08; margin-bottom: 4px; }   /* a 3:4 video (0.83 of the width tall) + the profile under it */
+.case-video-wrap { position: absolute; left: 19%; top: 0; width: 62%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: #061a4d; box-shadow: 0 18px 40px rgb(0 0 0 / 0.45); }
+.case-video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
+.case-sound { position: absolute; left: 10px; top: 10px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgb(1 11 36 / 0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 16px; line-height: 1; }
+.case-shot { position: absolute; display: block; height: auto; border-radius: 12px; border: 3px solid #fff; background: #fff; box-shadow: 0 16px 36px rgb(0 0 0 / 0.5); transition: transform 400ms var(--ease-entrance); user-select: none; }
+.case-shot--sticker { right: 0; top: 9%; width: 56%; transform: rotate(8deg); z-index: 2; }
+.case-shot--under { left: 6%; bottom: 0; width: 88%; transform: none; z-index: 1; }
+.review--case:hover .case-shot--sticker { transform: rotate(6deg) translateY(-4px); }
+.review--case:hover .case-shot--under { transform: translateY(-4px); }
+.case-play { position: absolute; inset: 0; display: grid; place-items: center; background: rgb(1 11 36 / 0.25); transition: opacity 250ms var(--ease-entrance); }
+.case-play span { position: relative; width: 64px; height: 64px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.25), 0 10px 30px rgb(0 0 0 / 0.4); transition: transform 200ms var(--ease-entrance); }
+.case-play span::before { content: ""; position: absolute; left: 50%; top: 50%; margin: -11px 0 0 -6px; border-left: 20px solid #0051ff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+.case-play:hover span { transform: scale(1.08); }
+.is-playing .case-play { opacity: 0; pointer-events: none; }
+.case-video { cursor: pointer; }
+.case-phone { position: absolute; left: 10%; top: 0; width: 46%; filter: drop-shadow(0 20px 40px rgb(0 0 0 / 0.5)); }
+.case-phone img { display: block; width: 100%; height: auto; border-radius: 9.4% / 4.45%; }
+.case-shot--low { right: 0; top: auto; bottom: 8%; width: 56%; transform: rotate(6deg); }
+.case-fan { position: absolute; inset: 0; }
+.case-fan img { position: absolute; top: 6%; width: 40%; height: auto; border-radius: 7% / 4%; box-shadow: 0 18px 40px rgb(0 0 0 / 0.5); transition: transform 400ms var(--ease-entrance); }
+.case-fan .fan-1 { left: 5%; transform: rotate(-9deg); z-index: 1; }
+.case-fan .fan-2 { left: 30%; top: 2%; z-index: 3; }
+.case-fan .fan-3 { right: 5%; transform: rotate(9deg); z-index: 2; }
+.review--case:hover .case-fan .fan-1 { transform: rotate(-11deg) translateX(-4px); }
+.review--case:hover .case-fan .fan-2 { transform: translateY(-4px); }
+.review--case:hover .case-fan .fan-3 { transform: rotate(11deg) translateX(4px); }
+.case-fan--duo img { width: 50%; border-radius: 5%; border: 1px solid rgb(255 255 255 / 0.18); }
+.case-fan--duo .fan-1 { left: 6%; top: 2%; transform: rotate(-5deg); z-index: 2; }
+.case-fan--duo .fan-2 { left: auto; right: 4%; top: 10%; transform: rotate(6deg); z-index: 1; }
+.review--case:hover .case-fan--duo .fan-1 { transform: rotate(-7deg) translateX(-4px); }
+.review--case:hover .case-fan--duo .fan-2 { transform: rotate(8deg) translateX(4px); }
+.review--case:hover .case-shot--low { transform: rotate(4deg) translateY(-4px); }
+.case-review-btn { right: 2%; top: 12%; width: auto; display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px; color: #010b24; font: 800 max(15px, 1.05vw)/1 var(--font-sans); letter-spacing: -0.01em; cursor: pointer; animation: review-nudge 3s ease-in-out infinite; }
+.case-review-icon { font-size: 1.2em; }
+.case-review-btn:hover { background: #9fc2ff; }
+@keyframes review-nudge { 0%, 100% { transform: rotate(8deg); } 50% { transform: rotate(5deg) translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .case-review-btn { animation: none; } }
+.lightbox { max-width: min(92vw, 720px); max-height: 90vh; padding: 0; border: 0; border-radius: 18px; background: transparent; overflow: visible; }
+.lightbox::backdrop { background: rgb(1 11 36 / 0.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lightbox img { display: block; max-width: 100%; max-height: 86vh; border-radius: 18px; box-shadow: 0 30px 80px rgb(0 0 0 / 0.6); }
+.lightbox-close { position: absolute; right: -14px; top: -14px; width: 42px; height: 42px; border-radius: 50%; background: #fff; color: #010b24; font: 600 26px/1 var(--font-sans); box-shadow: 0 8px 24px rgb(0 0 0 / 0.4); }
+.review-who a { color: #9fc2ff; }
+.case-title { font: 800 max(16px, 1.2vw)/1.25 var(--font-sans); letter-spacing: -0.02em; }
+.case-caption { font: 500 max(13px, 0.85vw)/1.45 var(--font-sans); color: rgb(255 255 255 / 0.75); }
+.case-caption a { color: #9fc2ff; font-weight: 700; }
+.case-title a { color: #9fc2ff; }
+.case-note { padding: 12px 14px; border-radius: 14px; background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.12); font: 500 max(12.5px, 0.8vw)/1.45 var(--font-sans); color: rgb(255 255 255 / 0.85); }
+
+
+/* ── The pricing block ── */
+.tariff { position: relative; min-height: 100lvh; height: auto; display: grid; grid-template-columns: 1fr minmax(320px, 520px); align-items: center; gap: max(32px, 5vw); padding: max(56px, 6vw) var(--frame-gutter) max(72px, 6vw); color: #fff; overflow: visible; }
+.tariff-h { font: 800 max(56px, 9vw)/0.9 var(--font-display); letter-spacing: -0.05em; white-space: nowrap; }
+.tariff-lead { margin-top: max(20px, 2vw); max-width: 560px; font: 700 max(19px, 1.7vw)/1.25 var(--font-sans); letter-spacing: -0.015em; }
+.tariff-sub { margin-top: 14px; max-width: 520px; font: 500 max(14px, 1vw)/1.45 var(--font-sans); color: rgb(255 255 255 / 0.78); }
+.tariff-card { position: relative; padding: max(24px, 2.2vw); border-radius: 28px; background: #fff; color: #010b24; box-shadow: 0 40px 90px rgb(1 11 36 / 0.35); }
+.tariff-tag { display: inline-block; padding: 7px 12px; border-radius: 999px; background: rgb(0 81 255 / 0.1); color: #0051ff; font: 700 11px/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; }
+.tariff-first { margin-top: 18px; font: 600 15px/1.3 var(--font-sans); color: rgb(1 11 36 / 0.7); }
+.tariff-first b { color: #010b24; font-weight: 800; }
+.tariff-price small { font: 700 18px/1 var(--font-sans); letter-spacing: -0.01em; color: rgb(1 11 36 / 0.6); }
+.tariff-label { margin-top: 14px; font: 600 15px/1.2 var(--font-sans); color: rgb(1 11 36 / 0.6); }
+.tariff-price { margin-top: 4px; font: 800 max(52px, 4.6vw)/1 var(--font-sans); letter-spacing: -0.045em; }
+.tariff-price span { color: inherit; }
+.tariff-renew { margin-top: 10px; font: 500 15px/1.35 var(--font-sans); color: rgb(1 11 36 / 0.7); }
+.tariff-renew b { color: #0051ff; font-weight: 800; }
+.tariff-list { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; padding-top: 22px; border-top: 1px solid rgb(1 11 36 / 0.1); }
+.tariff-list li { display: flex; gap: 12px; align-items: flex-start; font: 600 15px/1.35 var(--font-sans); }
+.tariff-list b { color: #0051ff; font-weight: 800; }
+.tariff-check { flex: none; width: 20px; height: 20px; margin-top: 1px; }
+.tariff-save { position: absolute; right: -14px; top: -16px; transform: rotate(6deg); padding: 10px 14px; border-radius: 12px; border: 2px solid #fff; background: #010b24; color: #9fc2ff; font: 800 18px/1 var(--font-sans); letter-spacing: -0.02em; box-shadow: 0 12px 30px rgb(1 11 36 / 0.35); }
+.tariff-save span { display: block; margin-top: 5px; font: 700 10px/1 var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: #fff; }
+.tariff-btn { width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; min-height: 58px; margin-top: 26px; border-radius: 999px; background: #0051ff; color: #fff; font: 700 17px/1 var(--font-sans); animation: join-pulse 2.4s ease-in-out infinite; transition: background-color 150ms var(--ease-entrance); }
+.tariff-btn:hover { background: #0046db; }
+.tariff-fine { margin-top: 10px; text-align: center; font: 500 12px/1.3 var(--font-sans); color: rgb(1 11 36 / 0.5); }
+@media (prefers-reduced-motion: reduce) { .tariff-btn { animation: none; } }
+@media (max-width: 900px) {
+  .tariff { grid-template-columns: 1fr; align-items: start; min-height: 0; padding-bottom: calc(max(48px, 6vw) + env(safe-area-inset-bottom, 0px)); }
+  .tariff-h { font-size: 64px; }
+  .tariff-save { right: 8px; }
+}
+
+/* ── The documents row at the very bottom ── */
+.site-footer { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: max(20px, 1.6vw) var(--frame-gutter) calc(max(20px, 1.6vw) + env(safe-area-inset-bottom, 0px)); background: #0051ff; border-top: 1px solid rgb(255 255 255 / 0.25); color: #fff; }
+.footer-docs { display: flex; flex-wrap: wrap; gap: 10px; }
+.footer-doc { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid rgb(255 255 255 / 0.55); color: #fff; font: 600 max(14px, 0.95vw)/1 var(--font-sans); transition: background-color 150ms var(--ease-entrance), color 150ms var(--ease-entrance); }
+.footer-doc:hover { background: #fff; color: #0051ff; }
+.footer-copy { font: 500 max(13px, 0.85vw)/1.3 var(--font-sans); color: rgb(255 255 255 / 0.7); }
 
 /* ── The closing screen, now a section of its own ── */
 .closing-section { position: relative; background: #0051ff; }
@@ -389,8 +483,8 @@ main { position: relative; background: #f0f0f0; }
   <section class="hero" id="top">
     <h2 class="sr-only">3D-скан автора на белой студийной сцене</h2>
     <div class="runway" data-runway>
-      <span class="anchor" id="method" data-anchor style="top: 216lvh"></span>
-      <span class="anchor" id="deliverables" data-anchor style="top: 480lvh"></span>
+      <span class="anchor" id="method" data-anchor style="top: 246lvh"></span>
+      <span class="anchor" id="deliverables" data-anchor style="top: 630lvh"></span>
 
       <div class="stage" data-stage>
         <!-- Layer 0: the name, behind the canvas -->
@@ -425,14 +519,14 @@ main { position: relative; background: #f0f0f0; }
             <h2 class="tide-h1 tide-h1--one" data-scene-ink>Что внутри канала</h2>
             <div class="inside-col">
               <ul class="inside-list">
-                <!-- Photo slots: replace the inner <span>фото</span> with <img src="photo.jpg" alt=""> -->
-                <li data-rise="0.06"><span class="inside-text"><b>10–15</b> новых готовых промптов с инструкциями каждый месяц</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
-                <li data-rise="0.14"><span class="inside-text">Пошаговые руководства</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
-                <li data-rise="0.22"><span class="inside-text">Видео-уроки</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
-                <li data-rise="0.3"><span class="inside-text">Фишки и лайфхаки для работы с Claude, Codex</span><span class="thumb" aria-hidden="true"><span>фото</span></span></li>
+                <!-- Thumbnails: swap the src for your own pictures (images/…) whenever you like -->
+                <li data-rise="0.06"><span class="inside-text"><b>10–15</b> новых готовых промптов с инструкциями каждый месяц</span><span class="thumb" aria-hidden="true"><img src="images/thumb-prompts.svg" alt="" width="400" height="300" loading="lazy"></span></li>
+                <li data-rise="0.14"><span class="inside-text"><b>5+</b> пошаговых руководств каждый месяц</span><span class="thumb" aria-hidden="true"><img src="images/thumb-guides.svg" alt="" width="400" height="300" loading="lazy"></span></li>
+                <li data-rise="0.22"><span class="inside-text">Видеоуроки с наглядными примерами</span><span class="thumb" aria-hidden="true"><img src="images/thumb-video.svg" alt="" width="400" height="300" loading="lazy"></span></li>
+                <li data-rise="0.3"><span class="inside-text">Фишки и лайфхаки для работы с Claude, Codex</span><span class="thumb" aria-hidden="true"><img src="images/thumb-tips.svg" alt="" width="400" height="300" loading="lazy"></span></li>
               </ul>
               <p class="inside-note" data-rise="0.4">С подпиской вы получаете доступ и к тому, что уже опубликовано, и ко всем обновлениям в течение оплаченного периода.</p>
-              <p class="inside-save" data-rise="0.5">22 000 ₽<span class="save-tag">экономия</span></p>
+              <p class="inside-save" data-rise="0.5">22 000 ₽<span class="save-tag">экономия каждый месяц</span></p>
             </div>
           </div>
         </div>
@@ -476,29 +570,53 @@ main { position: relative; background: #f0f0f0; }
         </div>
       </div>
       <p class="reviews-lead">Что ученики собрали по материалам канала — сайты, приложения и AI-сервисы.</p>
-      <ul class="reviews-track" data-reviews-track data-lenis-prevent></ul>
+      <ul class="reviews-track" data-reviews-track data-lenis-prevent-touch></ul>
       <div class="reviews-dots" data-reviews-dots aria-hidden="true"></div>
     </div>
   </section>
 
-  <section class="closing-section" id="book" aria-label="Стоимость подписки">
-    <div class="closing" data-closing style="--stage-reveal: 0">
-      <div class="sf">
-        <h2 class="closing-h" data-reveal="letter">Подписка</h2>
+  <!-- The pricing: a heading on the left, one tariff card on the right. -->
+  <section class="closing-section" id="book" aria-labelledby="tariff-title">
+    <div class="closing tariff" data-closing style="--stage-reveal: 0">
+      <div class="tariff-intro">
+        <h2 id="tariff-title" class="tariff-h" data-reveal="letter">localhost:</h2>
+        <p class="tariff-lead" data-rise="0.12">Закрытый Telegram-канал by polinext.production — все материалы и обучения по вайбкодингу в одной подписке.</p>
       </div>
-      <img class="closing-fig" data-asset="hero/model-cutout.webp" alt="" width="1300" height="1872">
-      <div class="closing-copy">
-        <div class="sf">
-          <div class="sb stack">
-            <p class="pos t-lead imm nowrap" style="--l: 2.0833vw; --t: 40.4167vw" data-reveal="word" data-rise="0.12">Первый месяц — 2 990 ₽</p>
-            <p class="pos t-body imm" style="--l: 2.0833vw; --t: 49.3056vw; --w: 27.2222vw" data-rise="0.26">В стоимость входят материалы, которые уже опубликованы, и новые материалы за время вашей подписки. Продление — 1 990 ₽ в месяц.</p>
-            <a class="pill-mail" href="https://t.me/" target="_blank" rel="noopener" data-join data-rise="0.38" data-magnetic><span>Вступить в закрытый канал</span></a>
-          </div>
-        </div>
+      <div class="tariff-card" data-rise="0.18">
+        <span class="tariff-tag">Закрытый Telegram-канал</span>
+        <p class="tariff-first">Первый месяц — <b>2 990 ₽</b></p>
+        <p class="tariff-label">Продление</p>
+        <p class="tariff-price">1 990 <span>₽</span> <small>в месяц</small></p>
+        <ul class="tariff-list">
+            <li><svg class="tariff-check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#0051ff"/><path d="M5.5 10.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>10–15</b> новых готовых промптов с инструкциями каждый месяц</span></li>
+            <li><svg class="tariff-check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#0051ff"/><path d="M5.5 10.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>5+</b> пошаговых руководств каждый месяц</span></li>
+            <li><svg class="tariff-check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#0051ff"/><path d="M5.5 10.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Видеоуроки с наглядными примерами</span></li>
+            <li><svg class="tariff-check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#0051ff"/><path d="M5.5 10.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Фишки и лайфхаки для работы с Claude, Codex</span></li>
+            <li><svg class="tariff-check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#0051ff"/><path d="M5.5 10.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Всё, что уже опубликовано, — сразу после вступления</span></li>
+        </ul>
+        <p class="tariff-save">22 000 ₽ <span>экономия каждый месяц</span></p>
+        <!-- No link yet: when there is a payment/join link, turn this into <a class="tariff-btn" href="…"> -->
+        <button type="button" class="tariff-btn">Вступить в закрытый канал</button>
+        <p class="tariff-fine">Доступ откроется сразу после оплаты</p>
       </div>
     </div>
   </section>
 </main>
+
+<!-- The documents row. Add more documents as extra <a class="footer-doc"> links. -->
+<footer class="site-footer">
+  <nav class="footer-docs" aria-label="Документы">
+    <a class="footer-doc" href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>
+    <a class="footer-doc" href="docs/offer.pdf" target="_blank" rel="noopener">Публичная оферта</a>
+    <a class="footer-doc" href="docs/consent.pdf" target="_blank" rel="noopener">Согласие на обработку персональных данных</a>
+  </nav>
+  <p class="footer-copy">© 2026 polinext.production</p>
+</footer>
+
+<dialog class="lightbox" data-lightbox aria-label="Отзыв">
+  <button type="button" class="lightbox-close" data-lightbox-close aria-label="Закрыть">×</button>
+  <img alt="">
+</dialog>
 
 <div class="navbar" data-navbar>
   <div class="nav-row">
@@ -515,7 +633,7 @@ main { position: relative; background: #f0f0f0; }
       <a href="#reviews">Отзывы</a>
       <a href="#book">Стоимость</a>
     </div>
-    <a class="nav-action" data-nav-item data-nav-shell data-nav-from-left href="#book">Вступить за 2 990 ₽</a>
+    <a class="nav-action" data-nav-item data-nav-shell data-nav-from-left href="#book">Вступить!</a>
   </div>
 </div>
 
@@ -672,20 +790,71 @@ const LAYER_WINDOWS = [
 ];
 const LITE_WINDOWS = [{ in: 0, hold: 0, out: 1, end: 1 }, { in: 0, hold: 0, out: 1, end: 1 }];
 
-/** Where "Вступить в закрытый канал" leads. Put the channel's invite link here. */
-const TELEGRAM_URL = "https://t.me/";
 
 /**
  * Reviews and student cases, one card each. PLACEHOLDERS — replace with real ones.
  * tag: "Кейс" or "Отзыв"; photo: a file path (e.g. "reviews/anna.jpg") or "" for an empty slot.
  */
+const SOUND_OFF = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="#fff"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
+const SOUND_ON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="#fff"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
+
 const REVIEWS = [
-  { tag: "Кейс", name: "Имя Фамилия", project: "Сайт для студии", photo: "", text: "Здесь будет кейс ученика: что он собрал по материалам канала и какой получил результат." },
-  { tag: "Отзыв", name: "Имя Фамилия", project: "Новичок в вайбкодинге", photo: "", text: "Здесь будет отзыв ученика — с чего начинал, что получилось и чем помог канал." },
-  { tag: "Кейс", name: "Имя Фамилия", project: "AI-сервис / Telegram-бот", photo: "", text: "Здесь будет кейс: задача, как решали через Claude или Codex, что вышло в итоге." },
-  { tag: "Отзыв", name: "Имя Фамилия", project: "Digital-специалист", photo: "", text: "Здесь будет отзыв: как материалы канала помогли в работе с клиентами и проектами." },
-  { tag: "Кейс", name: "Имя Фамилия", project: "Веб-приложение", photo: "", text: "Здесь будет кейс ученика со скриншотом проекта и коротким описанием результата." },
-  { tag: "Отзыв", name: "Имя Фамилия", project: "Дизайнер", photo: "", text: "Здесь будет отзыв ученика о промптах и пошаговых руководствах из канала." },
+  // Real cases: a 3:4 video, one screenshot straight under it ("under", with its
+  // pixel size so the stage can be sized) and one tilted over its corner ("sticker").
+  {
+    featured: true, tag: "Кейс", handle: "tarba_kristina", autoplay: true,
+    video: "cases/tarba-video.mp4", poster: "cases/tarba-poster.jpg",
+    sticker: { src: "cases/tarba-review.jpg", alt: "Скриншот отзыва: Полина, добрый день! Мы до сих пор под большим впечатлением от вашей консультации" },
+    under: { src: "cases/tarba-profile.jpg", w: 1280, h: 443, alt: "Профиль Instagram tarba_kristina: 230 тыс. подписчиков" },
+    title: "Анимационный сайт с нуля всего за 2 часа 🔥",
+    caption: "Собрали его вместе прямо на уроке для команды",
+  },
+  {
+    featured: true, tag: "Кейс", handle: "samkaliss", autoplay: false,
+    video: "cases/vika-video.mp4", poster: "cases/vika-poster.jpg",
+    // No sticker image here: the corner holds a "Посмотреть отзыв" button that opens the review full size.
+    popup: { label: "Посмотреть отзыв", src: "cases/vika-review.png", alt: "Отзыв Вики: за 5 занятий сложилось, как работать с вайбкодингом; успели сделать сайты и приложения; теперь могу сама собрать что-то с нуля" },
+    under: { src: "cases/vika-profile.jpg", w: 1280, h: 436, alt: "Профиль Instagram samkaliss: Вика, ИИ-креатор, 81,2 тыс. подписчиков" },
+    title: "Сервис с потенциальной прибылью от $500 / месяц",
+    handleInTitle: true,   // "… / месяц от @samkaliss", then straight to the note
+    note: "Суть сервиса — создание промптов по референсу и короткому описанию для нейросети Seedance",
+  },
+  {
+    featured: true, tag: "Кейс", autoplay: false,
+    video: "cases/stylist-video.mp4", poster: "cases/stylist-poster.jpg",
+    under: { src: "cases/stylist-profile.jpg", w: 1320, h: 426, alt: "Профиль Instagram katrin.mama.boss: Екатерина, стиль, материнство, бизнес" },
+    title: "AI-стилист за 1 час",
+    caption: "Екатерина пришла с нулевыми знаниями и всего за пару часов собрала свой первый полноценный AI-сервис.",
+  },
+  {
+    featured: true, tag: "AI-сервис",
+    // No video: a phone mockup stands where the video would, a screenshot pinned over it.
+    image: { src: "cases/whoop-phone.jpg", w: 554, h: 1170, alt: "Экран сервиса: вечерняя расшифровка дня — сон 74%, восстановление 68%, нагрузка 14.2 и главный вывод" },
+    sticker: { src: "cases/whoop-2.jpg", alt: "Расшифровка показателей: кислород в крови и частота дыхания — что значит, что сегодня, что делать", pos: "low" },
+    title: "Расшифровка показателей WHOOP",
+    caption: "AI-сервис, напрямую подключённый к приложению WHOOP: он анализирует показатели пользователя и в конце каждого дня автоматически присылает понятный отчёт на русском языке",
+  },
+  {
+    featured: true, tag: "Веб-приложение",
+    // Three screens of the funnel, fanned: the test in front, the exercises and the club behind.
+    fan: [
+      { src: "cases/nutri-2.png", alt: "Экран приложения: комплекс упражнений «5 минут для лёгкости в животе»" },
+      { src: "cases/nutri-1.png", alt: "Экран приложения Nutrition Care: тест «Почему появляется вздутие?»" },
+      { src: "cases/nutri-3.png", alt: "Экран приложения: закрытый клуб Nutrition Club, 900 ₽ в месяц, вступить в Telegram-клуб" },
+    ],
+    title: "Платформа для нутрициолога",
+    caption: "Приложение, которое одновременно работает как полезный AI-сервис для аудитории и как воронка, ведущая пользователя к покупке подписки на закрытый Telegram-канал.",
+  },
+  {
+    featured: true, tag: "Приложение",
+    // Two screens of the app as a pair: home in front, the schedule behind.
+    fan: [
+      { src: "cases/box-1.jpg", alt: "Главный экран приложения FIGHTCLUB: ближайшая тренировка, абонемент 7 из 12 занятий, прогресс" },
+      { src: "cases/box-2.jpg", alt: "Расписание FIGHTCLUB: занятия по дням и кнопки «Записаться»" },
+    ],
+    title: "Приложение для бойцовского клуба",
+    caption: "Полноценное приложение для бойцовского клуба с возможностью записи на тренировки и оплатой абонементов прямо внутри приложения.",
+  },
 ];
 
 
@@ -3153,6 +3322,25 @@ const heroSection = document.querySelector(".hero");
   }
 }
 
+/* ── Bottom-anchored columns must never climb into their screen's heading ── */
+{
+  const pairs = [[".inside-col", ".tide-h1"], [".who-col", ".word-h1"]]
+    .map(([c, h]) => [document.querySelector(c), document.querySelector(h)])
+    .filter(([c, h]) => c && h);
+  const fit = () => {
+    for (const [col, heading] of pairs) {
+      col.style.transform = "";
+      const room = col.getBoundingClientRect().bottom - heading.getBoundingClientRect().bottom - 20;
+      const scale = Math.min(1, room / Math.max(1, col.offsetHeight));
+      col.style.transformOrigin = "0 100%";
+      if (scale < 1) col.style.transform = `scale(${Math.max(0.5, scale)})`;
+    }
+  };
+  fit();
+  document.fonts.ready.then(fit);
+  addEventListener("resize", fit);
+}
+
 /* ── The name's subtitle hangs from the name's own box ── */
 {
   const name = document.querySelector(".name");
@@ -3205,7 +3393,6 @@ const watchImage = (img, url) => {
   img.src = url;
 };
 for (const img of document.querySelectorAll("img[data-asset]")) watchImage(img, asset(img.dataset.asset));
-for (const link of document.querySelectorAll("[data-join]")) link.href = TELEGRAM_URL;
 
 /* ── The lite path: the tide and the word become two still sections ── */
 const stills = [];
@@ -3354,7 +3541,22 @@ const updateLayers = () => {
   paintLayers();
 };
 
-scrollTrigger(runway, "top top", "bottom bottom", (p) => {
+/**
+ * The story is drawn on 6 screens of scroll; the runway is 1.5 screens longer and
+ * that extra stretch is a pause: once "Что внутри канала" has formed, scrolling
+ * holds the scene still (the field keeps living) before the story moves on.
+ */
+const RUNWAY_HOLD = { at: 0.36, screens: 1.5, story: 6 };
+const storyProgress = (raw) => {
+  if (LITE) return raw;
+  const { at, screens, story } = RUNWAY_HOLD;
+  const x = raw * (story + screens), start = at * story;
+  if (x < start) return x / story;
+  if (x < start + screens) return at;
+  return Math.min(1, (x - screens) / story);
+};
+scrollTrigger(runway, "top top", "bottom bottom", (raw) => {
+  const p = storyProgress(raw);
   runwayProgress = p;
   scene?.setScrollProgress(p);
   updateLayers();
@@ -3458,7 +3660,32 @@ addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
   REVIEWS.forEach((review, i) => {
     const li = document.createElement("li");
     li.className = "review";
-    li.innerHTML = `
+    if (review.featured) {
+      li.classList.add("review--case");
+      // Stage height: the 3:4 video (0.62 of the width → 0.827) + the screenshot under it (0.88 wide), overlapping by 0.06.
+      const stageRatio = review.fan ? (review.fan.length === 2 ? "0.86" : "0.76") : review.image
+        ? (0.46 * (review.image.h / review.image.w) + 0.02).toFixed(3)
+        : review.under ? (0.827 + 0.88 * (review.under.h / review.under.w) - 0.06).toFixed(3) : "0.827";
+      li.innerHTML = `
+      <div class="case-stage" style="aspect-ratio: 1 / ${stageRatio}">
+        ${review.fan ? `<div class="case-fan${review.fan.length === 2 ? " case-fan--duo" : ""}">${review.fan.map((shot, n) => `<img class="fan-${n + 1}" src="${shot.src}" alt="${shot.alt}" loading="lazy" draggable="false">`).join("")}</div>` : review.image ? `<div class="case-phone"><img src="${review.image.src}" alt="${review.image.alt}" loading="lazy" draggable="false"></div>` : `
+        <div class="case-video-wrap">
+          <video class="case-video" ${review.autoplay ? "muted loop data-autoplay" : ""} playsinline preload="none" poster="${review.poster}" data-src="${review.video}" aria-label="Видео кейса"></video>
+          ${review.autoplay
+            ? `<button type="button" class="case-sound" data-case-sound aria-label="Включить звук" aria-pressed="false"><span aria-hidden="true">${SOUND_OFF}</span></button>`
+            : `<button type="button" class="case-play" data-case-play aria-label="Смотреть видео"><span aria-hidden="true"></span></button>`}
+        </div>
+        `}
+        ${review.popup
+          ? `<button type="button" class="case-shot case-shot--sticker case-review-btn" data-review-open="${review.popup.src}" data-review-alt="${review.popup.alt}"><span class="case-review-icon" aria-hidden="true">💬</span>${review.popup.label}</button>`
+          : review.sticker ? `<img class="case-shot case-shot--sticker${review.sticker.pos === "low" ? " case-shot--low" : ""}" src="${review.sticker.src}" alt="${review.sticker.alt}" loading="lazy" draggable="false">` : ""}
+        ${review.under ? `<img class="case-shot case-shot--under" src="${review.under.src}" alt="${review.under.alt}" loading="lazy" draggable="false">` : ""}
+      </div>
+      <span class="review-tag">${review.tag}</span>
+      <h3 class="case-title">${review.title}${review.handleInTitle ? ` от <a href="https://www.instagram.com/${review.handle}/" target="_blank" rel="noopener">@${review.handle}</a>` : ""}</h3>
+      ${review.caption ? `<p class="case-caption">${review.caption}${review.handle && !review.handleInTitle ? ` <a href="https://www.instagram.com/${review.handle}/" target="_blank" rel="noopener">@${review.handle}</a>` : ""}</p>` : ""}
+      ${review.note ? `<p class="case-note">${review.note}</p>` : ""}`;
+    } else li.innerHTML = `
       <div class="review-photo">${review.photo ? `<img src="${review.photo}" alt="" loading="lazy">` : "<span>фото / скриншот проекта</span>"}</div>
       <span class="review-tag">${review.tag}</span>
       <blockquote class="review-quote">${review.text}</blockquote>
@@ -3469,14 +3696,76 @@ addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
     dots.append(dot);
   });
 
-  const cards = [...track.children];
-  const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth);
-  document.querySelector("[data-reviews-prev]").addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
-  document.querySelector("[data-reviews-next]").addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
-  track.addEventListener("scroll", () => {
-    const at = Math.round(track.scrollLeft / Math.max(1, step()));
-    [...dots.children].forEach((d, i) => d.classList.toggle("is-on", i === Math.min(at, cards.length - 1)));
+  // A sideways wheel/trackpad gesture belongs to the strip; anything vertical
+  // goes on to the page's smooth scroll, so the page never sticks over the cards.
+  track.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.stopPropagation();
   }, { passive: true });
+
+  const cards = [...track.children];
+  const startOf = (card) => card.offsetLeft - cards[0].offsetLeft;
+  const current = () => {
+    let best = 0;
+    cards.forEach((c, i) => { if (Math.abs(startOf(c) - track.scrollLeft) < Math.abs(startOf(cards[best]) - track.scrollLeft)) best = i; });
+    return best;
+  };
+  const step = () => (cards[1] ? startOf(cards[1]) : track.clientWidth);
+  const goTo = (i) => track.scrollTo({ left: startOf(cards[Math.max(0, Math.min(cards.length - 1, i))]), behavior: "smooth" });
+  document.querySelector("[data-reviews-prev]").addEventListener("click", () => goTo(current() - 1));
+  document.querySelector("[data-reviews-next]").addEventListener("click", () => goTo(current() + 1));
+  track.addEventListener("scroll", () => {
+    const at = current();
+    [...dots.children].forEach((d, i) => d.classList.toggle("is-on", i === at));
+  }, { passive: true });
+
+  // Case videos load only once the carousel is near. An autoplay video plays
+  // muted while seen; the others wait for a tap on ▶ and then play with sound.
+  const load = (video) => {
+    if (video.src) return;
+    video.src = video.dataset.src;
+    video.addEventListener("error", () => reportFailure(video.dataset.src), { once: true });
+  };
+  for (const video of track.querySelectorAll("video[data-src]")) {
+    const auto = video.hasAttribute("data-autoplay");
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { if (auto) { load(video); video.play().catch(() => {}); } }
+      else video.pause();
+    }, { threshold: 0.35 }).observe(video);
+  }
+  for (const button of track.querySelectorAll("[data-case-sound]")) {
+    button.addEventListener("click", () => {
+      const video = button.parentElement.querySelector("video");
+      video.muted = !video.muted;
+      if (!video.muted) video.play().catch(() => {});
+      button.setAttribute("aria-pressed", String(!video.muted));
+      button.setAttribute("aria-label", video.muted ? "Включить звук" : "Выключить звук");
+      button.firstElementChild.innerHTML = video.muted ? SOUND_OFF : SOUND_ON;
+    });
+  }
+  for (const button of track.querySelectorAll("[data-case-play]")) {
+    const wrap = button.parentElement, video = wrap.querySelector("video");
+    const start = () => { load(video); video.muted = false; video.play().catch(() => {}); };
+    button.addEventListener("click", start);
+    video.addEventListener("click", () => (video.paused ? start() : video.pause()));
+    video.addEventListener("play", () => wrap.classList.add("is-playing"));
+    video.addEventListener("pause", () => wrap.classList.remove("is-playing"));
+    video.addEventListener("ended", () => wrap.classList.remove("is-playing"));
+  }
+
+  // "Посмотреть отзыв": the review opens full size over the page.
+  const lightbox = document.querySelector("[data-lightbox]");
+  const lightboxImg = lightbox.querySelector("img");
+  const closeLightbox = () => { if (lightbox.open) lightbox.close(); };
+  lightbox.addEventListener("close", () => lenis.start());
+  lightbox.addEventListener("click", (e) => { if (e.target === lightbox || e.target.closest("[data-lightbox-close]")) closeLightbox(); });
+  for (const button of track.querySelectorAll("[data-review-open]")) {
+    button.addEventListener("click", () => {
+      lightboxImg.src = button.dataset.reviewOpen;
+      lightboxImg.alt = button.dataset.reviewAlt;
+      lenis.stop();
+      lightbox.showModal();
+    });
+  }
 
   // A mouse can drag the strip too; touch and trackpads scroll it natively.
   let drag = null;
@@ -3496,8 +3785,7 @@ addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
     drag = null;
     track.classList.remove("is-dragging");
     // Settle on the nearest card.
-    const s = step();
-    track.scrollTo({ left: Math.round(track.scrollLeft / s) * s, behavior: "smooth" });
+    goTo(current());
   });
 
   // Cards rise into place as the section arrives.
