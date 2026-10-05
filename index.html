@@ -399,11 +399,13 @@ main { position: relative; background: #f0f0f0; }
 }
 
 /* ── The documents row at the very bottom ── */
-.site-footer { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: max(20px, 1.6vw) var(--frame-gutter) calc(max(20px, 1.6vw) + env(safe-area-inset-bottom, 0px)); background: #0051ff; border-top: 1px solid rgb(255 255 255 / 0.25); color: #fff; }
-.footer-docs { display: flex; flex-wrap: wrap; gap: 10px; }
-.footer-doc { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid rgb(255 255 255 / 0.55); color: #fff; font: 600 max(14px, 0.95vw)/1 var(--font-sans); transition: background-color 150ms var(--ease-entrance), color 150ms var(--ease-entrance); }
-.footer-doc:hover { background: #fff; color: #0051ff; }
-.footer-copy { font: 500 max(13px, 0.85vw)/1.3 var(--font-sans); color: rgb(255 255 255 / 0.7); }
+.site-footer { position: relative; display: flex; flex-direction: column; gap: 18px; padding: max(28px, 2.4vw) var(--frame-gutter) calc(max(28px, 2.4vw) + env(safe-area-inset-bottom, 0px)); background: #0051ff; border-top: 1px solid rgb(255 255 255 / 0.25); color: #fff; }
+.footer-legal { display: flex; flex-direction: column; gap: 4px; font: 500 max(13px, 0.85vw)/1.45 var(--font-sans); color: rgb(255 255 255 / 0.78); }
+.footer-legal .footer-name { color: #fff; font-weight: 700; }
+.footer-legal a, .footer-docs a { color: #fff; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 0.45); text-underline-offset: 3px; transition: text-decoration-color 150ms var(--ease-entrance); }
+.footer-legal a:hover, .footer-docs a:hover { text-decoration-color: #fff; }
+.footer-docs { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; padding-top: 16px; border-top: 1px solid rgb(255 255 255 / 0.2); font: 600 max(13px, 0.85vw)/1.4 var(--font-sans); }
+.footer-docs span { color: rgb(255 255 255 / 0.55); }
 
 /* ── The closing screen, now a section of its own ── */
 .closing-section { position: relative; background: #0051ff; }
@@ -603,14 +605,21 @@ main { position: relative; background: #f0f0f0; }
   </section>
 </main>
 
-<!-- The documents row. Add more documents as extra <a class="footer-doc"> links. -->
+<!-- The site's foot: requisites, then the documents. Add a document as another <a> (with a · before it). -->
 <footer class="site-footer">
+  <div class="footer-legal">
+    <p class="footer-name">© 2026 Полина Ефимова</p>
+    <p>Самозанятая</p>
+    <p>ИНН: 665814764344</p>
+    <p>Контакты: <a href="mailto:info@localhostpolinext.ru">info@localhostpolinext.ru</a></p>
+  </div>
   <nav class="footer-docs" aria-label="Документы">
-    <a class="footer-doc" href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>
-    <a class="footer-doc" href="docs/offer.pdf" target="_blank" rel="noopener">Публичная оферта</a>
-    <a class="footer-doc" href="docs/consent.pdf" target="_blank" rel="noopener">Согласие на обработку персональных данных</a>
+    <a href="docs/offer.pdf" target="_blank" rel="noopener">Публичная оферта</a>
+    <span aria-hidden="true">·</span>
+    <a href="privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>
+    <span aria-hidden="true">·</span>
+    <a href="docs/consent.pdf" target="_blank" rel="noopener">Согласие на обработку персональных данных</a>
   </nav>
-  <p class="footer-copy">© 2026 polinext.production</p>
 </footer>
 
 <dialog class="lightbox" data-lightbox aria-label="Отзыв">
